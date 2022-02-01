@@ -1,0 +1,57 @@
+set ssl_starttls=yes
+set ssl_force_tls=yes
+set imap_user = 'wbrookes66@gmail.com'
+set imap_pass = ''
+set from='wbrookes66@gmail.com'
+
+set realname='Will Brookes'
+set folder = imaps://imap.gmail.com/
+set spoolfile = imaps://imap.gmail.com/INBOX
+set postponed="imaps://imap.gmail.com/[Gmail]/Drafts"
+set header_cache = "~/.mutt/cache/headers"
+set message_cachedir = "~/.mutt/cache/bodies"
+set certificate_file = "~/.mutt/certificates"
+set smtp_url = 'smtps://wbrookes66@smtp.gmail.com:465'
+set smtp_pass = ''
+set move = no
+set imap_keepalive = 900
+
+set sort=threads
+set sort_browser=date
+set sort_aux=reverse-last-date-received
+
+set editor=vi
+
+set mailcap_path = ~/.mutt/mailcap
+auto_view text/html
+auto_view image/*
+
+mailboxes +GMail/INBOX +GMail/Social
+
+# set up the sidebar, default not visible
+#set sidebar_width=12
+#set sidebar_visible=yes
+# # which mailboxes to list in the sidebar
+#mailboxes =
+# # color of folders with new mail
+# color sidebar_new yellow default
+# # ctrl-n, ctrl-p to select next, prev folder
+# # ctrl-o to open selected folder
+# bind index \CP sidebar-prev
+# bind index \CN sidebar-next
+# bind index \CO sidebar-open
+# bind pager \CP sidebar-prev
+# bind pager \CN sidebar-next
+# bind pager \CO sidebar-open
+# # I don't need these.  just for documentation purposes.
+# # sidebar-scroll-up
+# # sidebar-scroll-down
+# # b toggles sidebar visibility
+# macro index b '<enter-command>toggle sidebar_visible<ent
+# macro pager b '<enter-command>toggle sidebar_visible<ent
+# # Remap bounce-message function to "B"
+# bind index B bounce-message
+# #
+# # Mario Holbe suggests:
+# # macro index b '<enter-command>toggle sidebar_visible<e
+# #

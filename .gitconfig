@@ -1,0 +1,31 @@
+[user]
+	name = William Brookes
+	email = wbrookes66@gmail.com
+[core]
+	editor = vim
+	autocrlf = false
+	whitespace = cr-at-eol
+[push]
+	default = simple
+[alias]
+	co = checkout
+	ci = commit
+	br = branch
+	st = status
+	last = log -1 HEAD
+	unstage = reset HEAD --
+	logd = log --decorate --graph --format=oneline --all
+    dt = difftool -t vimdiff -y
+    mt = mergetool -t vimdiff
+
+[color "branch"]
+    upstream = 215
+
+[color "interactive"]
+    prompt = 69
+[difftool]
+	prompt = false
+[fetch]
+    prune = true
+[pull]
+    rebase = true
