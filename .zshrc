@@ -92,18 +92,14 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-source ~/.bash_aliases
+# aliases
+if [ -f ~/.bash_aliases ]; then source ~/.bash_aliases; fi
+
+# custom functions
+if [ -f ~/.shell_functions ]; then source ~/.shell_functions; fi
 
 # To add support for TTYs this line can be optionally added.
-source ~/.cache/wal/colors-tty.sh
+if [ -f ~/.cache/wal/colors-tty.sh ]; then source ~/.cache/wal/colors-tty.sh; fi
 
 # disable XON/XOFF (Ctrl+s)
 stty -ixon

@@ -8,3 +8,4 @@ alias locate=plocate
 alias ll='ls -alFh'
 alias ipython=ipython3
 alias config='/usr/bin/git --git-dir=/home/will/.cfg/ --work-tree=/home/will'
+alias paclog='paclog -c'
