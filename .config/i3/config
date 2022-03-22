@@ -18,6 +18,7 @@ set $mod Mod1
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
+#
 #font pango:Fira Code 9
 font pango:JetBrains Mono Nerd Font 9
 
@@ -162,10 +163,10 @@ bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # Open specific applications in floating mode
-for_window [class="zoom"] floating enable
-for_window [title="Zoom Meeting"] floating enable
-for_window [class="Spotify"] floating enable
-for_window [class="Spotify"] resize set 1400 900
+for_window [class="zoom" title="Zoom Meeting"] floating enable
+for_window [class="zoom" title="Settings"] floating enable
+for_window [class="zoom" title="Chat"] floating enable
+for_window [class="Spotify"] floating enable, resize set 1400 900
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
