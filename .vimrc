@@ -75,7 +75,7 @@ set splitbelow splitright  " more natural window split behaviour
 set wildmenu               " cool bar when tab completing
 
 if $TERM != "tmux-256color"
-    set termguicolors          "use this to fix dracula background, breaks for tmux
+    set termguicolors          "use this to fix dracula background, breaks for tmux & alacritty
 endif
 
 "Default to colour scheme set by wal, use F keys to change if it's shit

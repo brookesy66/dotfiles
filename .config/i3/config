@@ -20,7 +20,7 @@ set $mod Mod1
 #font pango:DejaVu Sans Mono 8
 #
 #font pango:Fira Code 9
-font pango:JetBrains Mono Nerd Font 9
+font pango:JetBrains Mono Nerd Font 8
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status # i3status
@@ -304,7 +304,7 @@ exec dunst
 #############################
 
 # Set inner/outer gaps
-gaps inner 14
+gaps inner 10
 gaps outer -2
 
 # Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
