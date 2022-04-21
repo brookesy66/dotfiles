@@ -1,6 +1,5 @@
 if [[ $TERM = "xterm-kitty" ]]; then
     # alias ssh for kitty to allow tmux to work
-    alias ssh='kitty +kitten ssh'
     alias icat="kitty +kitten icat"
 fi
 
