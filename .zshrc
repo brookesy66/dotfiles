@@ -8,7 +8,8 @@ export ZSH="/home/will/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="will"
+#ZSH_THEME="will"
+ZSH_THEME="lukerandall"
 #ZSH_THEME="random"
 
 # Set list of themes to pick from when loading at random
@@ -71,7 +72,7 @@ ZSH_THEME="will"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(vi-mode command-not-found)
+plugins=(vi-mode command-not-found colored-man-pages)
 
 source $ZSH/oh-my-zsh.sh
 

@@ -129,6 +129,9 @@ autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
 "Addition of wsd as plantuml files
 autocmd BufNewFile,BufRead *.wsd set syntax=plantuml
 
+"XML syntax for XAML files
+autocmd BufNewFile,BufRead *.xaml set syntax=xml
+
 "When editing a file, always jump to the last known cursor position.
 "Don't do it when the position is invalid or when inside an event handler
 "(happens when dropping a file on gvim).
