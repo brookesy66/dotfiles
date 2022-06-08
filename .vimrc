@@ -26,11 +26,11 @@ Plug 'dylanaraps/wal.vim'                           " sync colorscheme from pywa
 Plug 'dracula/vim', { 'as': 'dracula' }             " dracula colorscheme
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fuzzy search finder
 Plug 'junegunn/fzf.vim'                             " fuzzy search finder
-Plug 'preservim/nerdtree'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'ryanoasis/vim-devicons'
-
+Plug 'preservim/nerdtree'                           " nerdtree file browser
+Plug 'vim-airline/vim-airline'                      " status line bar
+Plug 'vim-airline/vim-airline-themes'               " status line bar
+Plug 'ryanoasis/vim-devicons'                       " show icons in vim statusline etc
+Plug 'dense-analysis/ale'                           " linter
 
 call plug#end()
 "}}}
@@ -77,6 +77,8 @@ set hidden                 "hides buffer if it is abandoned
 set splitbelow splitright  "more natural window split behaviour
 set wildmenu               "cool bar when tab completing
 set fdm=syntax             "folding by syntax
+set foldenable!            "start with all folds open, close with <z-i>
+set textwidth=100          "sets line at which gq wraps text
 
 "Default to colour scheme set by wal, use F keys to change if it's shit
 "colorscheme wal
@@ -182,6 +184,7 @@ if has('termguicolors') && &termguicolors
 
 ""VimWiki
 nmap <Leader>wv <Plug>VimwikiVSplitLink
+nmap <Leader>wt <Plug>VimwikiTabnewLink
 
 """multiple
 let wiki_1 = {}
@@ -193,7 +196,7 @@ let g:vimwiki_list = [wiki_1, wiki_2]
 """folding
 let g:vimwiki_folding='custom'
 au BufNewFile,BufRead,BufReadPost *.wiki set fdm=syntax
-au BufNewFile,BufRead,BufReadPost *.wiki set foldlevel=2
+au BufNewFile,BufRead,BufReadPost *.wiki set foldlevel=1
 
 
 ""Ctags
@@ -204,7 +207,7 @@ let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 "let g:netrw_browse_split = 4 "open file vsplit
 let g:netrw_altv = 1 "vsplit right
-let g:netrw_winsize = 80
+let g:netrw_winsize = 85
 let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro' "line numbers
 
 ""OmniSharp
