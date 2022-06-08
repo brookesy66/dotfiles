@@ -16,7 +16,6 @@ Plug 'nanotech/jellybeans.vim'                      " a nice colorscheme
 "Plug 'chrisbra/csv.vim'                            " CSV file manipulation
 Plug 'vimwiki/vimwiki'                              " wiki/diary plugin
 Plug 'OmniSharp/omnisharp-vim'                      " C# IDE-like plugin
-Plug 'dense-analysis/ale'                           " linter
 Plug 'tpope/vim-fugitive'                           " powerful Git plugin
 Plug 'junegunn/gv.vim'                              " Git commit browser - uses fugitive
 Plug 'git://github.com/shime/vim-livedown'          " markdown plugin
@@ -27,6 +26,10 @@ Plug 'dylanaraps/wal.vim'                           " sync colorscheme from pywa
 Plug 'dracula/vim', { 'as': 'dracula' }             " dracula colorscheme
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fuzzy search finder
 Plug 'junegunn/fzf.vim'                             " fuzzy search finder
+Plug 'preservim/nerdtree'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons'
 
 
 call plug#end()
@@ -61,35 +64,34 @@ set background=dark
 set t_Co=256
 set history=50
 set hlsearch
-set autoread               " automatically refresh files not edited by vim while open
+set autoread               "automatically refresh files not edited by vim while open
 set ruler
-set visualbell             " stop beeping
-set t_vb=                  " deactivate annoying flashing
-set incsearch              " do incremental searching
-set fml=3                  " min fold lines
-set nowrap                 " prevent text wrapping
-set ignorecase             " required for smartcase
-set smartcase              " smartcase searching
-set hidden                 " hides buffer if it is abandoned
-set splitbelow splitright  " more natural window split behaviour
-set wildmenu               " cool bar when tab completing
-
-if $TERM != "tmux-256color"
-    set termguicolors          "use this to fix dracula background, breaks for tmux & alacritty
-endif
+set visualbell             "stop beeping
+set t_vb=                  "deactivate annoying flashing
+set incsearch              "do incremental searching
+set fml=3                  "min fold lines
+set nowrap                 "prevent text wrapping
+set ignorecase             "required for smartcase
+set smartcase              "smartcase searching
+set hidden                 "hides buffer if it is abandoned
+set splitbelow splitright  "more natural window split behaviour
+set wildmenu               "cool bar when tab completing
+set fdm=syntax             "folding by syntax
 
 "Default to colour scheme set by wal, use F keys to change if it's shit
 "colorscheme wal
+let g:dracula_colorterm = 0 "remove grey shade background
 colorscheme dracula
 
 "Settings for colorcolumn, only set if coding
 au FileType c,cs,cpp,python,rust,sh set colorcolumn=81,101
-highlight ColorColumn ctermbg=234
-
+"highlight ColorColumn ctermbg=234 " looks like removing this ensures cc is
+"that grey colour always
 
 "Omnicompletion
 filetype plugin on
 set omnifunc=syntaxcomplete#Complete
+
 "}}}
 
 "Mappings{{{
@@ -199,7 +201,7 @@ set tags=./tags,tags;$HOME
 
 ""Netrw (explorer) settings
 let g:netrw_banner = 0
-let g:netrw_liststyle = 0
+let g:netrw_liststyle = 3
 "let g:netrw_browse_split = 4 "open file vsplit
 let g:netrw_altv = 1 "vsplit right
 let g:netrw_winsize = 80
@@ -221,14 +223,14 @@ let g:ale_linters = { 'cs': ['OmniSharp'] } "Tell ALE to use OmniSharp for linti
 augroup omnisharp_commands
     autocmd!
 
-    " The following commands are contextual, based on the cursor position.
+    "The following commands are contextual, based on the cursor position.
     autocmd FileType cs nnoremap <buffer> <C-]> :OmniSharpGotoDefinition<CR>
     autocmd FileType cs nnoremap <buffer> <Leader>dp :OmniSharpPreviewDefinition<CR>
     autocmd FileType cs nnoremap <buffer> <Leader>fi :OmniSharpFindImplementations<CR>
     autocmd FileType cs nnoremap <buffer> <Leader>fs :OmniSharpFindSymbol<CR>
     autocmd FileType cs nnoremap <buffer> <Leader>fu :OmniSharpFindUsages<CR>
 
-    " Finds members in the current buffer
+    "Finds members in the current buffer
     autocmd FileType cs nnoremap <buffer> <Leader>fm :OmniSharpFindMembers<CR>
 
     autocmd FileType cs nnoremap <buffer> <Leader>fx :OmniSharpFixUsings<CR>
@@ -241,10 +243,14 @@ augroup omnisharp_commands
 augroup END
 
 
-" livedown
+""livedown
 let g:livedown_browser = "firefox"
 nmap gm :LivedownToggle<CR>
 
-" black python formatter
+""black python formatter
 autocmd BufWritePre *.py execute ':Black'
+
+""YCM
+let g:ycm_always_populate_location_list = 1 "use location list
+let g:ycm_autoclose_preview_window_after_completion = 1
 
