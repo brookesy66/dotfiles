@@ -76,8 +76,9 @@ set smartcase              "smartcase searching
 set hidden                 "hides buffer if it is abandoned
 set splitbelow splitright  "more natural window split behaviour
 set wildmenu               "cool bar when tab completing
+set wildoptions=pum        "popup wildmenu
 set fdm=syntax             "folding by syntax
-set foldenable!            "start with all folds open, close with <z-i>
+"set foldenable!            "start with all folds open, close with <z-i>
 set textwidth=100          "sets line at which gq wraps text
 
 "Default to colour scheme set by wal, use F keys to change if it's shit
@@ -256,4 +257,20 @@ autocmd BufWritePre *.py execute ':Black'
 ""YCM
 let g:ycm_always_populate_location_list = 1 "use location list
 let g:ycm_autoclose_preview_window_after_completion = 1
+
+"FZF
+let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
+
+function! s:build_quickfix_list(lines)
+    call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
+    copen
+    cc
+endfunction
+
+let g:fzf_action = {
+    \ 'ctrl-q': function('s:build_quickfix_list'),
+    \ 'ctrl-t': 'tab split',
+    \ 'ctrl-x': 'split',
+    \ 'ctrl-v': 'vsplit' }
+
 

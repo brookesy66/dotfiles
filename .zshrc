@@ -110,3 +110,15 @@ export PATH="${HOME}/.local/bin:$PATH"
 
 # add time to prompt
 RPROMPT='[%D{%K:%M:%S}] '$RPROMPT
+
+export PATH="$HOME/.poetry/bin:$PATH"
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+#fzf
+source /usr/share/fzf/completion.zsh
+source /usr/share/fzf/key-bindings.zsh
+
