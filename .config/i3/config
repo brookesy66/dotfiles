@@ -167,6 +167,11 @@ for_window [class="zoom" title="Zoom Meeting"] floating enable
 for_window [class="zoom" title="Settings"] floating enable
 for_window [class="zoom" title="Chat"] floating enable
 for_window [class="Spotify"] floating enable, resize set 1400 900
+for_window [instance="origin.exe"] floating enable
+for_window [window_role="pop-up"] floating enable
+
+for_window [class="Firefox"] move to workspace $ws2
+for_window [class="org.remmina.Remmina"] move to workspace $ws5
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
