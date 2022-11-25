@@ -159,6 +159,13 @@ if IsWSL()
     au FileType cs set makeprg='/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Professional/MSBuild/Current/Bin/MSBuild.exe'\ /nologo\ /v:q\ /property:Platform='x64',WarningLevel=0
     au FileType cs set errorformat=\ %#%f(%l\\\,%c):\ %m
 endif
+
+"Python
+au FileType python set fdm=indent
+au FileType python set foldlevel=1
+au FileType python set textwidth=80
+
+
 ":}}}
 
 "Plugins{{{
@@ -257,6 +264,17 @@ autocmd BufWritePre *.py execute ':Black'
 ""YCM
 let g:ycm_always_populate_location_list = 1 "use location list
 let g:ycm_autoclose_preview_window_after_completion = 1
+
+
+"" ALE
+au FileType python  nmap <C-]> <Plug>(ale_go_to_definition)
+au FileType python  nmap <Leader>fu <Plug>(ale_find_references)
+au FileType python  nmap <silent> <Leader>fu :ALEFindReferences -quickfix<CR>
+au FileType python  nmap <Leader>dc <Plug>(ale_documentation)
+au FileType python  nmap <Leader>dp <Plug>(ale_hover)
+let g:ale_floating_preview=1
+let g:ale_hover_cursor=0 " don't hover by default
+
 
 "FZF
 let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
