@@ -17,6 +17,8 @@
 	logd = log --decorate --graph --format=oneline --all
     dt = difftool -t vimdiff -y
     mt = mergetool -t vimdiff
+    fco = ! git branch | fzf | xargs git checkout
+    fre = ! git status --porcelain | grep '^ M' | awk '{print $2}' | fzf | xargs git restore --
 
 [color "branch"]
     upstream = 215
