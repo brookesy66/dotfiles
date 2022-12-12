@@ -1,0 +1,7 @@
+#!/bin/bash
+
+function google() {
+    BASE_URL="https://www.google.com/search?q="
+    SEARCH_STRING=$(sed 's/ /+/g' <<< $@)
+    w3m ${BASE_URL}${SEARCH_STRING}
+}
