@@ -1,0 +1,28 @@
+!URxvt.scrollBar: 	false
+!URxvt.font:         xft:dejavu sans mono:size=11, xft:FontAwesome
+!URxvt.boldFont:     xft:dejavu sans mono:bold:size=11
+! below is with the dpi change present
+URxvt.scrollBar: 	false
+URxvt.font:         xft:JetBrains Mono Nerd Font Mono:size=12
+URxvt.boldFont:     xft:JetBrains Mono Nerd Font Mono:bold:size=12
+!URxvt.font:         xft:JetBrains Mono Nerd Font Mono:size=9
+!URxvt.boldFont:     xft:JetBrains Mono Nerd Font Mono:bold:size=9
+
+URxvt.letterSpace: -1
+
+URxvt.antialias:    true
+URxvt.hinting:      true
+URxvt.hintstyle:    hintfull
+URxvt.rgba:         rgb
+URxvt.autohint:     false
+URxvt.lcdfilter:    lcddefault
+
+! from gnome. Also what I got from https://www.calculatorsoup.com/calculators/technology/ppi-calculator.php
+Xft.dpi:    94
+
+! calculated. Not sure about this
+!Xft.dpi: 104
+
+! this just looks crisp but is too zoomed in
+!Xft.dpi: 120
+
