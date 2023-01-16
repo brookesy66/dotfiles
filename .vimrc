@@ -31,6 +31,7 @@ Plug 'vim-airline/vim-airline'                      " status line bar
 Plug 'vim-airline/vim-airline-themes'               " status line bar
 Plug 'ryanoasis/vim-devicons'                       " show icons in vim statusline etc
 Plug 'dense-analysis/ale'                           " linter
+Plug 'vim-test/vim-test'
 
 call plug#end()
 "}}}
@@ -64,22 +65,23 @@ set background=dark
 set t_Co=256
 set history=50
 set hlsearch
-set autoread               "automatically refresh files not edited by vim while open
+set autoread                    "automatically refresh files not edited by vim while open
 set ruler
-set visualbell             "stop beeping
-set t_vb=                  "deactivate annoying flashing
-set incsearch              "do incremental searching
-set fml=3                  "min fold lines
-set nowrap                 "prevent text wrapping
-set ignorecase             "required for smartcase
-set smartcase              "smartcase searching
-set hidden                 "hides buffer if it is abandoned
-set splitbelow splitright  "more natural window split behaviour
-set wildmenu               "cool bar when tab completing
-set wildoptions=pum        "popup wildmenu
-set fdm=syntax             "folding by syntax
-"set foldenable!            "start with all folds open, close with <z-i>
-set textwidth=100          "sets line at which gq wraps text
+set visualbell                  "stop beeping
+set t_vb=                       "deactivate annoying flashing
+set incsearch                   "do incremental searching
+set fml=3                       "min fold lines
+set nowrap                      "prevent text wrapping
+set ignorecase                  "required for smartcase
+set smartcase                   "smartcase searching
+set hidden                      "hides buffer if it is abandoned
+set splitbelow splitright       "more natural window split behaviour
+set wildmenu                    "cool bar when tab completing
+set wildoptions=pum             "popup wildmenu
+set fdm=syntax                  "folding by syntax
+set foldenable!                 "start with all folds open, close with <z-i>
+set textwidth=100               "sets line at which gq wraps text
+set completeopt=popup,menuone   "use popup window, not preview
 
 "Default to colour scheme set by wal, use F keys to change if it's shit
 "colorscheme wal
@@ -292,3 +294,10 @@ let g:fzf_action = {
     \ 'ctrl-v': 'vsplit' }
 
 
+"" Vimtest
+nmap <silent> <leader>t :TestNearest<CR>
+nmap <silent> <leader>T :TestFile<CR>
+nmap <silent> <leader>a :TestSuite<CR>
+nmap <silent> <leader>l :TestLast<CR>
+nmap <silent> <leader>g :TestVisit<CR>
+let test#strategy = "make"
