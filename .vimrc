@@ -82,6 +82,7 @@ set fdm=syntax                  "folding by syntax
 set foldenable!                 "start with all folds open, close with <z-i>
 set textwidth=100               "sets line at which gq wraps text
 set completeopt=popup,menuone   "use popup window, not preview
+set t_RV=                       "fix issue with devicons/airline having junk
 
 "Default to colour scheme set by wal, use F keys to change if it's shit
 "colorscheme wal
