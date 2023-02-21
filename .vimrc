@@ -123,6 +123,8 @@ noremap <C-w><C-y> <C-w>10<
 noremap <C-w><C-o> <C-w>10>
 noremap <C-w><C-u> <C-w>10-
 noremap <C-w><C-i> <C-w>10+
+
+let mapleader = "\<space>" "space as leader key
 "}}}
 
 "Autocommands{{{
@@ -271,7 +273,6 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 
 "" ALE
 au FileType python  nmap <C-]> <Plug>(ale_go_to_definition)
-au FileType python  nmap <Leader>fu <Plug>(ale_find_references)
 au FileType python  nmap <silent> <Leader>fu :ALEFindReferences -quickfix<CR>
 au FileType python  nmap <Leader>dc <Plug>(ale_documentation)
 au FileType python  nmap <Leader>dp <Plug>(ale_hover)
@@ -294,11 +295,17 @@ let g:fzf_action = {
     \ 'ctrl-x': 'split',
     \ 'ctrl-v': 'vsplit' }
 
+" some cheeky shortcuts
+noremap <leader>f :Files<cr>
+noremap <leader>b :Buffers<cr>
+noremap <leader>a :Ag<cr>
+noremap <leader>l :Lines<cr>
+
 
 "" Vimtest
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
-nmap <silent> <leader>a :TestSuite<CR>
-nmap <silent> <leader>l :TestLast<CR>
-nmap <silent> <leader>g :TestVisit<CR>
+nmap <silent> <leader>A :TestSuite<CR>
+nmap <silent> <leader>L :TestLast<CR>
+nmap <silent> <leader>G :TestVisit<CR>
 let test#strategy = "make"
