@@ -264,20 +264,24 @@ let g:livedown_browser = "firefox"
 nmap gm :LivedownToggle<CR>
 
 ""black python formatter
-autocmd BufWritePre *.py execute ':Black'
+"autocmd BufWritePre *.py execute ':Black'
 
 ""YCM
 let g:ycm_always_populate_location_list = 1 "use location list
 let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_auto_hover=''
+let g:ycm_key_detailed_diagnostics = '' " delete mapping
 
 
-"" ALE
+""ALE
 au FileType python  nmap <C-]> <Plug>(ale_go_to_definition)
-au FileType python  nmap <silent> <Leader>fu :ALEFindReferences -quickfix<CR>
+au FileType python  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
 au FileType python  nmap <Leader>dc <Plug>(ale_documentation)
 au FileType python  nmap <Leader>dp <Plug>(ale_hover)
 let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
+let g:ale_fixers = {'python': ['black']}
+let g:ale_fix_on_save = 1
 
 
 "FZF
@@ -309,3 +313,71 @@ nmap <silent> <leader>A :TestSuite<CR>
 nmap <silent> <leader>L :TestLast<CR>
 nmap <silent> <leader>G :TestVisit<CR>
 let test#strategy = "make"
+
+"" NERDTREE
+noremap <leader>n :NERDTree %<cr>
+
+"}}}
+
+"Highlight words{{{
+"===================
+" Existing match patterns for each highlight group.
+let g:hi_interesting_word_patterns = ['', '', '', '', '', '', '']
+function! HiInterestingWord(n)
+    " Save our location.
+    normal! mz
+    " Yank the current word into the z register.
+    normal! "zyiw
+    " Construct a literal pattern that has to match at boundaries.
+    let pat = '\V\<' . escape(@z, '\') . '\>'
+    " Attempting to highlight the same pattern will toggle the highlight.
+    " Turning off a highlight for a word will turn it off for all
+    " highlight groups.
+    let toggled = 0
+    for i in [1, 2, 3, 4, 5, 6]
+      let existing_pat = get(g:hi_interesting_word_patterns, i, '')
+      " Calculate an arbitrary match ID.  Hopefully nothing else is using it.
+      let mid = 86750 + i
+      if pat ==? existing_pat
+        " Clear existing matches, but don't worry if they don't exist.
+        " This is toggle highlight off.
+        silent! call matchdelete(mid)
+        let g:hi_interesting_word_patterns[i] = ''
+        if i == a:n
+          let toggled = 1
+        endif
+      endif
+    endfor
+    " Current pattern didn't match any existing?  Move highlight to new word
+    if toggled == 0
+      let mid = 86750 + a:n
+      silent! call matchdelete(mid)
+      call matchadd("InterestingWord" . a:n, pat, 1, mid)
+      let g:hi_interesting_word_patterns[a:n] = pat
+    endif
+    " Move back to our original location.
+    normal! z`
+endfunction
+nnoremap <silent> <leader>1 :call HiInterestingWord(1)<cr>
+nnoremap <silent> <leader>2 :call HiInterestingWord(2)<cr>
+nnoremap <silent> <leader>3 :call HiInterestingWord(3)<cr>
+nnoremap <silent> <leader>4 :call HiInterestingWord(4)<cr>
+nnoremap <silent> <leader>5 :call HiInterestingWord(5)<cr>
+nnoremap <silent> <leader>6 :call HiInterestingWord(6)<cr>
+function! ConfigureHiInterestingWord()
+    highlight def InterestingWord1 guifg=#000000 ctermfg=16 guibg=#ffa724 ctermbg=214
+    highlight def InterestingWord2 guifg=#000000 ctermfg=16 guibg=#aeee00 ctermbg=154
+    highlight def InterestingWord3 guifg=#000000 ctermfg=16 guibg=#8cffba ctermbg=121
+    highlight def InterestingWord4 guifg=#000000 ctermfg=16 guibg=#b88853 ctermbg=137
+    highlight def InterestingWord5 guifg=#000000 ctermfg=16 guibg=#ff9eb8 ctermbg=211
+    highlight def InterestingWord6 guifg=#000000 ctermfg=16 guibg=#ff2c4b ctermbg=195
+endfunction
+call ConfigureHiInterestingWord()
+" Some colorschemes reset all custom highlights.  Use a ColorScheme
+" event to retrigger addition of custom highlights.
+" https://jdhao.github.io/2020/09/22/highlight_groups_cleared_in_nvim/
+augroup custom_highlight
+  autocmd!
+  au ColorScheme * call ConfigureHiInterestingWord()
+augroup END
+"}}}

@@ -12,12 +12,13 @@
 	ci = commit
 	br = branch
 	st = status
+	sw = switch
 	last = log -1 HEAD
 	unstage = reset HEAD --
 	logd = log --decorate --graph --format=oneline --all
     dt = difftool -t vimdiff -y
     mt = mergetool -t vimdiff
-    fco = ! git branch | fzf | xargs git checkout
+    fco= !git branch -a | fzf | sed \"s/remotes\\/origin\\///\" | xargs git checkout
     fre = ! git status --porcelain | grep '^ M' | awk '{print $2}' | fzf | xargs git restore --
 
 [color "branch"]

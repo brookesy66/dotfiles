@@ -6,3 +6,7 @@ alias config='/usr/bin/git --git-dir=/home/will/.cfg/ --work-tree=/home/will'
 alias paclog='paclog -c'
 alias grep='grep -I'
 alias du='du -h'
+alias spt=~/projects/spotify-tui/target/debug/spt # point @ own copy
+alias fvim='vim $(fzf)'
+alias fvi='fvim'
+
