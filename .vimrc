@@ -271,7 +271,14 @@ let g:ycm_always_populate_location_list = 1 "use location list
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_auto_hover=''
 let g:ycm_key_detailed_diagnostics = '' " delete mapping
-
+let g:ycm_filetype_blacklist = {
+    \ 'tagbar': 1,
+    \ 'netrw': 1,
+    \ 'unite': 1,
+    \ 'pandoc': 1,
+    \ 'infolog': 1,
+    \ 'leaderf': 1
+    \}
 
 ""ALE
 au FileType python  nmap <C-]> <Plug>(ale_go_to_definition)
