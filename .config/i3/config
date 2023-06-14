@@ -19,8 +19,9 @@ set $mod Mod1
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 #
-#font pango:Fira Code 9
-font pango:JetBrains Mono Nerd Font 10
+font pango:JetBrains Mono 10
+# For if we want the tv fonts readable:
+#font pango:JetBrains Mono Nerd Font 25
 
 #for big DPI
 #font pango:JetBrains Mono Nerd Font 8
@@ -172,9 +173,14 @@ for_window [class="zoom" title="Chat"] floating enable
 for_window [class="Spotify"] floating enable, resize set 1400 900
 for_window [instance="origin.exe"] floating enable
 for_window [window_role="pop-up"] floating enable
+for_window [class="Blueman-manager"] floating enable
+for_window [title="Keyboard firmware flasher"] floating enable
 
 for_window [class="Firefox"] move to workspace $ws2
-for_window [class="org.remmina.Remmina"] move to workspace $ws5
+
+# not sure why we need both of these for the quick connect and remmina client itself...
+for_window [instance="org.remmina.Remmina"] move to workspace $ws5
+for_window [title="Quick Connect"] move to workspace $ws5
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -253,7 +259,7 @@ client.background       #F8F8F2
 # .desktop file. It is a wrapper around dmenu, so you need that installed.
 # PROTIP: You can also dynamically set dmenu's colors this way:
 #bindsym $mod+d exec --no-startup-id j4-dmenu-desktop --dmenu='dmenu -i -nb "$bg" -nf "$hl" -sb "$hl" -sf "$fg-alt" -l 20'
-bindsym $mod+d exec --no-startup-id j4-dmenu-desktop --dmenu='dmenu -i -nb "#282A36" -nf "#F8F8F2" -sb "#6272A4" -sf "#F8F8F2" -l 20 -fn "JetBrainsMono:pixelsize=14"' # dracula
+bindsym $mod+d exec --no-startup-id j4-dmenu-desktop --dmenu='dmenu -i -nb "#282A36" -nf "#F8F8F2" -sb "#6272A4" -sf "#F8F8F2" -l 20 -fn "JetBrains Mono:pixelsize=14"' # dracula
 #bindsym $mod+d exec --no-startup-id j4-dmenu-desktop --dmenu='dmenu -i -nb "#282A36" -nf "#F8F8F2" -sb "#6272A4" -sf "#F8F8F2" -l 20' # dracula
 
 # Start i3bar to display a workspace bar (plus the system information i3status
@@ -261,10 +267,10 @@ bindsym $mod+d exec --no-startup-id j4-dmenu-desktop --dmenu='dmenu -i -nb "#282
 bar {
         status_command i3status | ~/projects/i3spotifystatus/pystatus.py
         #status_command i3blocks
-        tray_output DP-3
-        #separator_symbol "]  ["
-        #separator_symbol " \/ "
+        #tray_output DP-3
+        tray_output primary
         separator_symbol " || "
+        position bottom
 
     # PYWAL
     #colors {
