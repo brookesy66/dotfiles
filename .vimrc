@@ -287,7 +287,7 @@ au FileType python  nmap <Leader>dc <Plug>(ale_documentation)
 au FileType python  nmap <Leader>dp <Plug>(ale_hover)
 let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
-let g:ale_fixers = {'python': ['black', 'isort']}
+let g:ale_fixers = {'python': ['isort', 'black']}
 let g:ale_fix_on_save = 1
 
 
