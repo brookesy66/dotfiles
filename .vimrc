@@ -83,6 +83,7 @@ set foldenable!                 "start with all folds open, close with <z-i>
 set textwidth=100               "sets line at which gq wraps text
 set completeopt=popup,menuone   "use popup window, not preview
 set t_RV=                       "fix issue with devicons/airline having junk
+set spell spelllang=en_au       "turn spell on
 
 "Default to colour scheme set by wal, use F keys to change if it's shit
 "colorscheme wal
@@ -277,7 +278,8 @@ let g:ycm_filetype_blacklist = {
     \ 'unite': 1,
     \ 'pandoc': 1,
     \ 'infolog': 1,
-    \ 'leaderf': 1
+    \ 'leaderf': 1,
+    \ 'vimwiki': 1
     \}
 
 ""ALE
@@ -287,7 +289,9 @@ au FileType python  nmap <Leader>dc <Plug>(ale_documentation)
 au FileType python  nmap <Leader>dp <Plug>(ale_hover)
 let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
-let g:ale_fixers = {'python': ['isort', 'black']}
+let g:ale_fixers = {
+            \ 'python': ['isort', 'black'],
+            \ }
 let g:ale_fix_on_save = 1
 
 
