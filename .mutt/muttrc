@@ -26,7 +26,8 @@ set editor=vi
 
 set mailcap_path = ~/.mutt/mailcap
 auto_view text/html
-auto_view image/*
+auto_view text/HTML
+#auto_view image/*
 
 mailboxes +GMail/INBOX +GMail/Social
 

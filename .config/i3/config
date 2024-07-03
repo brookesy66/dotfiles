@@ -9,7 +9,8 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
-set $mod Mod1
+# mod4 = super, mod1 = alt
+set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -59,7 +60,9 @@ bindsym $mod+Return exec kitty
 bindsym $mod+Shift+q kill
 
 # sounds
-bindsym $mod+Ctrl+m exec pavucontrol
+# This is stupid, I tried setting the GTK_THEME in the desktop file but no go. It's GTK4 now so
+# that's why it isn't behaving. I fucking hate stupid work arounds
+bindsym $mod+Ctrl+m exec "GTK_THEME=Dracula pavucontrol"
 
 # change focus
 bindsym $mod+h focus left

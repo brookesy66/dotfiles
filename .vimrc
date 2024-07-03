@@ -32,6 +32,8 @@ Plug 'vim-airline/vim-airline-themes'               " status line bar
 Plug 'ryanoasis/vim-devicons'                       " show icons in vim statusline etc
 Plug 'dense-analysis/ale'                           " linter
 Plug 'vim-test/vim-test'
+Plug 'mzlogin/vim-markdown-toc'                     " markdown TOC generator
+
 
 call plug#end()
 "}}}
@@ -199,6 +201,10 @@ if has('termguicolors') && &termguicolors
 ""VimWiki
 nmap <Leader>wv <Plug>VimwikiVSplitLink
 nmap <Leader>wt <Plug>VimwikiTabnewLink
+" required for it to work
+set nocompatible
+filetype plugin on
+syntax on
 
 """multiple
 let wiki_1 = {}
@@ -223,6 +229,7 @@ let g:netrw_liststyle = 3
 let g:netrw_altv = 1 "vsplit right
 let g:netrw_winsize = 85
 let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro' "line numbers
+let g:netrw_browsex_viewer= "xdg-open"
 
 ""OmniSharp
 filetype indent on                          "apparently required for the plugin to work
@@ -245,7 +252,7 @@ augroup omnisharp_commands
     autocmd FileType cs nnoremap <buffer> <Leader>dp :OmniSharpPreviewDefinition<CR>
     autocmd FileType cs nnoremap <buffer> <Leader>fi :OmniSharpFindImplementations<CR>
     autocmd FileType cs nnoremap <buffer> <Leader>fs :OmniSharpFindSymbol<CR>
-    autocmd FileType cs nnoremap <buffer> <Leader>fu :OmniSharpFindUsages<CR>
+    autocmd FileType cs nnoremap <buffer> <Leader>u :OmniSharpFindUsages<CR>
 
     "Finds members in the current buffer
     autocmd FileType cs nnoremap <buffer> <Leader>fm :OmniSharpFindMembers<CR>
