@@ -103,33 +103,6 @@ set omnifunc=syntaxcomplete#Complete
 
 "}}}
 
-"Mappings{{{
-"============
-
-"Toggle number lines
-map <F2> :set number! <bar> set relativenumber! <CR>
-
-"Insert current date as YYYY-MM-DD Day format
-map <F3> :r! date +\%F" "\%A <CR> <bar> kdd
-
-"Switch colorscheme to use wal
-map <F9> :colorscheme wal <CR>
-
-"Switch colorscheme to jellybeans
-map <F10> :colorscheme jellybeans <CR>
-
-" Allow saving of files as sudo when I forget to start vim using sudo.
-cmap w!! w !sudo tee /dev/null %
-
-"Tmux-like resizing shortcuts
-noremap <C-w><C-y> <C-w>10<
-noremap <C-w><C-o> <C-w>10>
-noremap <C-w><C-u> <C-w>10-
-noremap <C-w><C-i> <C-w>10+
-
-let mapleader = "\<space>" "space as leader key
-"}}}
-
 "Autocommands{{{
 "===============
 
@@ -398,4 +371,31 @@ augroup custom_highlight
   autocmd!
   au ColorScheme * call ConfigureHiInterestingWord()
 augroup END
+"}}}
+
+"Mappings{{{
+"============
+
+"Toggle number lines
+map <F2> :set number! <bar> set relativenumber! <CR>
+
+"Insert current date as YYYY-MM-DD Day format
+map <F3> :r! date +\%F" "\%A <CR> <bar> kdd
+
+"Switch colorscheme to use wal
+map <F9> :colorscheme wal <CR>
+
+"Switch colorscheme to jellybeans
+map <F10> :colorscheme jellybeans <CR>
+
+" Allow saving of files as sudo when I forget to start vim using sudo.
+cmap w!! w !sudo tee /dev/null %
+
+"Tmux-like resizing shortcuts
+noremap <C-w><C-y> <C-w>10<
+noremap <C-w><C-o> <C-w>10>
+noremap <C-w><C-u> <C-w>10-
+noremap <C-w><C-i> <C-w>10+
+
+let mapleader = "\<space>" "space as leader key
 "}}}
