@@ -272,7 +272,11 @@ let g:ale_hover_cursor=0 " don't hover by default
 let g:ale_fixers = {
             \ 'python': ['isort', 'black'],
             \ }
+let g:ale_linters = {
+            \ 'python': ['ruff', 'mypy', 'pyright'],
+            \ }
 let g:ale_fix_on_save = 1
+let g:ale_virtualenv_dir_names = ['.venv']
 
 
 "FZF
@@ -307,6 +311,9 @@ let test#strategy = "make"
 
 "" NERDTREE
 noremap <leader>n :NERDTree %<cr>
+
+"" Fugitive
+nmap <leader>gl :Gclog<CR>
 
 "}}}
 
