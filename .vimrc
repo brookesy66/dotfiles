@@ -404,5 +404,6 @@ noremap <C-w><C-o> <C-w>10>
 noremap <C-w><C-u> <C-w>10-
 noremap <C-w><C-i> <C-w>10+
 
-let mapleader = "\<space>" "space as leader key
+nnoremap <SPACE> <Nop>
+map <Space> <Leader>
 "}}}
