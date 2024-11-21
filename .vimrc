@@ -24,6 +24,7 @@ Plug 'Valloric/YouCompleteMe'                       " auto completion
 "Plug 'vim/killersheep'                             " funny game
 Plug 'dylanaraps/wal.vim'                           " sync colorscheme from pywal
 Plug 'dracula/vim', { 'as': 'dracula' }             " dracula colorscheme
+Plug 'lifepillar/vim-solarized8'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fuzzy search finder
 Plug 'junegunn/fzf.vim'                             " fuzzy search finder
 Plug 'preservim/nerdtree'                           " nerdtree file browser
@@ -88,9 +89,8 @@ set t_RV=                       "fix issue with devicons/airline having junk
 set spell spelllang=en_au       "turn spell on
 
 "Default to colour scheme set by wal, use F keys to change if it's shit
-"colorscheme wal
 let g:dracula_colorterm = 0 "remove grey shade background
-colorscheme dracula
+colorscheme jellybeans
 
 "Settings for colorcolumn, only set if coding
 au FileType c,cs,cpp,python,rust,sh set colorcolumn=81,101

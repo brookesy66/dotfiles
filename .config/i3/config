@@ -317,6 +317,9 @@ exec --no-startup-id blueman-applet
 #exec --no-startup-id polychromatic-tray-applet
 exec dunst
 
+# should force qt apps to be crisp
+
+
 #############################
 ### settings for i3-gaps: ###
 #############################

@@ -12,7 +12,7 @@ URxvt.letterSpace: -1
 
 URxvt.antialias:    true
 URxvt.hinting:      true
-URxvt.hintstyle:    hintfull
+URxvt.hintstyle:    hintmedium
 URxvt.rgba:         rgb
 URxvt.autohint:     false
 URxvt.lcdfilter:    lcddefault
@@ -20,12 +20,13 @@ URxvt.lcdfilter:    lcddefault
 ! These might also be useful depending on your monitor and personal preference:
 Xft.autohint: 0
 Xft.lcdfilter:  lcddefault
-Xft.hintstyle:  hintfull
+Xft.hintstyle:  hintmedium
 Xft.hinting: 1
 Xft.antialias: 1
 Xft.rgba: rgb
 
 ! from gnome. Also what I got from https://www.calculatorsoup.com/calculators/technology/ppi-calculator.php
+! was 96 but I just changed
 Xft.dpi:    94
 
 ! calculated. Not sure about this
