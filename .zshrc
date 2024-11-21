@@ -121,3 +121,4 @@ eval "$(pyenv init -)"
 #fzf
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
+eval "$(uv generate-shell-completion zsh)"
