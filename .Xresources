@@ -27,7 +27,10 @@ Xft.rgba: rgb
 
 ! from gnome. Also what I got from https://www.calculatorsoup.com/calculators/technology/ppi-calculator.php
 ! was 96 but I just changed
-Xft.dpi:    94
+! Xft.dpi:    94
+!
+! this is for 4k screen
+Xft.dpi:    163
 
 ! calculated. Not sure about this
 !Xft.dpi: 104
