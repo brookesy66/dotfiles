@@ -1,6 +1,6 @@
 [user]
-	name = William Brookes
-	email = wbrookes66@gmail.com
+	name = Will Brookes
+	email = will.brookes@planetinnovation.com.au
 [core]
 	editor = vim
 	autocrlf = false
@@ -39,3 +39,5 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[url "git@gitlab.pi.planetinnovation.com.au:"]
+	insteadof = https://gitlab.pi.planetinnovation.com.au

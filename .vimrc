@@ -59,7 +59,6 @@ endfunction
 "set softtabstop=2 shiftwidth=2 tabstop=2 expandtab " From VTX
 set shiftwidth=4 tabstop=4 expandtab   		        " Clayton's standard, using @ Grey/PI
 "set tabstop=8 shiftwidth=8                         " kernel standard
-let g:netrw_browsex_viewer= "xdg-open"
 
 set relativenumber
 set number
@@ -79,7 +78,6 @@ set smartcase                   "smartcase searching
 set hidden                      "hides buffer if it is abandoned
 set splitbelow splitright       "more natural window split behaviour
 set wildmenu                    "cool bar when tab completing
-set wildoptions=pum             "popup wildmenu
 set fdm=syntax                  "folding by syntax
 set foldenable!                 "start with all folds open, close with <z-i>
 set textwidth=100               "sets line at which gq wraps text
@@ -87,10 +85,8 @@ set completeopt=popup,menuone   "use popup window, not preview
 set t_RV=                       "fix issue with devicons/airline having junk
 set spell spelllang=en_au       "turn spell on
 
-"Default to colour scheme set by wal, use F keys to change if it's shit
-"colorscheme wal
 let g:dracula_colorterm = 0 "remove grey shade background
-colorscheme dracula
+colorscheme jellybeans
 
 "Settings for colorcolumn, only set if coding
 au FileType c,cs,cpp,python,rust,sh set colorcolumn=81,101
@@ -191,7 +187,6 @@ let g:vimwiki_folding='custom'
 au BufNewFile,BufRead,BufReadPost *.wiki set fdm=syntax
 au BufNewFile,BufRead,BufReadPost *.wiki set foldlevel=1
 
-
 ""Ctags
 set tags=./tags,tags;$HOME
 
@@ -209,13 +204,8 @@ filetype indent on                          "apparently required for the plugin 
 let g:OmniSharp_highlighting = 0            "disable omnisharp highlighting
 let g:OmniSharp_server_stdio = 1            "use the stdio OmniSharp-roslyn server
 let g:OmniSharp_timeout = 5                 "timeout in seconds to wait for a response from the server
-if IsWSL()
-    "let g:OmniSharp_server_path = '/mnt/c/Users/william.brookes/omnisharp-win-x64/OmniSharp.exe'
-    let g:OmniSharp_translate_cygwin_wsl = 1    "needed to convert windows and linux paths
-    let g:OmniSharp_server_use_mono = 0
-else
-    let g:OmniSharp_server_use_mono = 1
-endif
+let g:OmniSharp_translate_cygwin_wsl = 1    "needed to convert windows and linux paths
+let g:OmniSharp_server_use_mono = 0
 let g:ale_linters = { 'cs': ['OmniSharp'] } "Tell ALE to use OmniSharp for linting C# files, and no other linters.
 augroup omnisharp_commands
     autocmd!
@@ -404,5 +394,8 @@ noremap <C-w><C-o> <C-w>10>
 noremap <C-w><C-u> <C-w>10-
 noremap <C-w><C-i> <C-w>10+
 
+nnoremap <SPACE> <Nop>
+map <Space> <Leader>
 let mapleader = "\<space>" "space as leader key
+let mapleader = " " "space as leader key
 "}}}

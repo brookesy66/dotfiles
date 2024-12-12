@@ -1,12 +1,11 @@
-alias icat="kitty +kitten icat"
-
-alias locate=plocate
 alias ll='ls -alFh'
 alias config='/usr/bin/git --git-dir=/home/will/.cfg/ --work-tree=/home/will'
-alias paclog='paclog -c'
-alias grep='grep -I'
+alias grep='grep -I --color=auto'
 alias du='du -h'
-alias spt=~/projects/spotify-tui/target/debug/spt # point @ own copy
 alias fvim='vim $(fzf)'
 alias fvi='fvim'
+
+alias home='cd /mnt/c/Users/wgb/'
+alias proj='cd /mnt/c/projects/'
+alias exp='explorer.exe .'
 
