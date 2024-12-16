@@ -210,11 +210,11 @@ let g:OmniSharp_highlighting = 0            "disable omnisharp highlighting
 let g:OmniSharp_server_stdio = 1            "use the stdio OmniSharp-roslyn server
 let g:OmniSharp_timeout = 5                 "timeout in seconds to wait for a response from the server
 if IsWSL()
-    "let g:OmniSharp_server_path = '/mnt/c/Users/william.brookes/omnisharp-win-x64/OmniSharp.exe'
     let g:OmniSharp_translate_cygwin_wsl = 1    "needed to convert windows and linux paths
     let g:OmniSharp_server_use_mono = 0
 else
-    let g:OmniSharp_server_use_mono = 1
+    "let g:OmniSharp_server_use_mono = 1
+    let g:OmniSharp_server_use_net6 = 1 "Had to set this to use .net7 sdk on emerald. msbuild too old
 endif
 let g:ale_linters = { 'cs': ['OmniSharp'] } "Tell ALE to use OmniSharp for linting C# files, and no other linters.
 augroup omnisharp_commands
@@ -387,7 +387,10 @@ augroup END
 map <F2> :set number! <bar> set relativenumber! <CR>
 
 "Insert current date as YYYY-MM-DD Day format
-map <F3> :r! date +\%F" "\%A <CR> <bar> kdd
+map <F4> :r! date +\%F" "\%A <CR> <bar> kdd
+
+" Toggle spell
+map <F7> :set spell! <CR>
 
 "Switch colorscheme to use wal
 map <F9> :colorscheme wal <CR>
