@@ -11,10 +11,10 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'vimwiki/vimwiki'                              " wiki/diary plugin
 Plug 'ntpeters/vim-better-whitespace'               " better handling of whitespace
 Plug 'nanotech/jellybeans.vim'                      " a nice colorscheme
-"Plug 'chrisbra/csv.vim'                            " CSV file manipulation
-Plug 'vimwiki/vimwiki'                              " wiki/diary plugin
+Plug 'chrisbra/csv.vim'                             " CSV file manipulation
 Plug 'OmniSharp/omnisharp-vim'                      " C# IDE-like plugin
 Plug 'tpope/vim-fugitive'                           " powerful Git plugin
 Plug 'junegunn/gv.vim'                              " Git commit browser - uses fugitive
@@ -258,8 +258,7 @@ let g:ycm_filetype_blacklist = {
     \ 'unite': 1,
     \ 'pandoc': 1,
     \ 'infolog': 1,
-    \ 'leaderf': 1,
-    \ 'vimwiki': 1
+    \ 'leaderf': 1
     \}
 
 ""ALE
@@ -267,6 +266,10 @@ au FileType python  nmap <C-]> <Plug>(ale_go_to_definition)
 au FileType python  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
 au FileType python  nmap <Leader>dc <Plug>(ale_documentation)
 au FileType python  nmap <Leader>dp <Plug>(ale_hover)
+au FileType rust  nmap <C-]> <Plug>(ale_go_to_definition)
+au FileType rust  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
+au FileType rust  nmap <Leader>dc <Plug>(ale_documentation)
+au FileType rust  nmap <Leader>dp <Plug>(ale_hover)
 let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
 let g:ale_fixers = {
