@@ -258,7 +258,8 @@ let g:ycm_filetype_blacklist = {
     \ 'unite': 1,
     \ 'pandoc': 1,
     \ 'infolog': 1,
-    \ 'leaderf': 1
+    \ 'leaderf': 1,
+    \ 'vimwiki': 1
     \}
 
 ""ALE

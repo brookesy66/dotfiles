@@ -122,3 +122,6 @@ eval "$(pyenv init -)"
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
 eval "$(uv generate-shell-completion zsh)"
+
+# fixes colored-man-pages plugin not working
+export GROFF_NO_SGR=1

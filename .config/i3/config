@@ -183,8 +183,12 @@ for_window [class="feh"] floating enable
 for_window [class="Firefox"] move to workspace $ws2
 
 # not sure why we need both of these for the quick connect and remmina client itself...
+for_window [class="org.remmina.Remmina"] move to workspace $ws5
 for_window [instance="org.remmina.Remmina"] move to workspace $ws5
+for_window [class="Quick Connect"] move to workspace $ws5
 for_window [title="Quick Connect"] move to workspace $ws5
+for_window [class="Infinity"] move to workspace $ws5
+for_window [title="Infinity"] move to workspace $ws5
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -273,7 +277,7 @@ bar {
         #status_command i3blocks
         tray_output primary
         separator_symbol " || "
-        position bottom
+        position top
 
     # PYWAL
     #colors {
@@ -305,7 +309,7 @@ bar {
 ###    startup programs   ###
 #############################
 exec_always picom --xrender-sync-fence # sync fence needed on some nvidia systems with glx backend
-exec redshift-gtk
+# exec redshift-gtk # pausing redshift as I mainly use i3 just for KCD sessions
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork

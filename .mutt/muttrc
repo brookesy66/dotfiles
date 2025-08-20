@@ -31,6 +31,8 @@ auto_view text/HTML
 
 mailboxes +GMail/INBOX +GMail/Social
 
+bind index G imap-fetch-mail
+
 # set up the sidebar, default not visible
 #set sidebar_width=12
 #set sidebar_visible=yes
