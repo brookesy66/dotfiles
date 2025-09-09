@@ -177,12 +177,14 @@ set nocompatible
 filetype plugin on
 syntax on
 
+
 """multiple
-let wiki_1 = {}
-let wiki_1.path = '~/vimwiki'
-let wiki_2 = {}
-let wiki_2.path = '~/vimwiki/work/wgb-wiki'
-let g:vimwiki_list = [wiki_1, wiki_2]
+"let wiki_1 = {}
+"let wiki_1.path = '~/vimwiki'
+"let wiki_2 = {}
+"let wiki_2.path = '~/vimwiki/work/wgb-wiki'
+"let g:vimwiki_list = [wiki_1, wiki_2, { 'path': '~/vimwiki/', 'auto_tags': 1 }]
+let g:vimwiki_list = [{ 'path': '/home/wgb/vimwiki', 'auto_tags': 1 }]
 
 """folding
 let g:vimwiki_folding='custom'
@@ -263,12 +265,15 @@ let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
 let g:ale_fixers = {
             \ 'python': ['isort', 'black'],
+            \ 'cpp': ['clang-format'],
             \ }
 let g:ale_linters = {
             \ 'python': ['ruff', 'mypy', 'pyright'],
+            \ 'cpp': ['clangd'],
             \ }
 let g:ale_fix_on_save = 1
 let g:ale_virtualenv_dir_names = ['.venv']
+autocmd FileType vimwiki let b:ale_enabled = 0 " ALE chugs here
 
 
 "FZF
@@ -379,7 +384,10 @@ augroup END
 map <F2> :set number! <bar> set relativenumber! <CR>
 
 "Insert current date as YYYY-MM-DD Day format
-map <F3> :r! date +\%F" "\%A <CR> <bar> kdd
+map <F3> :r! date +\%F" "\%A <CR> <bar>
+
+" Toggle spell
+map <F7> :set spell! <CR>
 
 "Switch colorscheme to use wal
 map <F9> :colorscheme wal <CR>
