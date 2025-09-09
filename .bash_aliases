@@ -8,4 +8,7 @@ alias fvi='fvim'
 alias home='cd /mnt/c/Users/wgb/'
 alias proj='cd /mnt/c/projects/'
 alias exp='explorer.exe .'
+alias psh='powershell.exe'
+alias powershell='powershell.exe'
+alias cmd='cmd.exe'
 
