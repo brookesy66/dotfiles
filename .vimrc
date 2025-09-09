@@ -84,6 +84,9 @@ set textwidth=100               "sets line at which gq wraps text
 set completeopt=popup,menuone   "use popup window, not preview
 set t_RV=                       "fix issue with devicons/airline having junk
 set spell spelllang=en_au       "turn spell on
+set exrc                        " allow per-directory vimrc
+set secure                      " disable unsafe commands in local vimrcs
+
 
 let g:dracula_colorterm = 0 "remove grey shade background
 colorscheme jellybeans
@@ -149,7 +152,6 @@ au FileType python set textwidth=80
 "===========
 
 ""auto remove whitespace
-autocmd BufEnter * EnableStripWhitespaceOnSave
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
 let g:strip_whitespace_confirm=0
