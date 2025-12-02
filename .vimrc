@@ -86,7 +86,9 @@ set foldenable!                 "start with all folds open, close with <z-i>
 set textwidth=100               "sets line at which gq wraps text
 set completeopt=popup,menuone   "use popup window, not preview
 set t_RV=                       "fix issue with devicons/airline having junk
-set spell spelllang=en_au       "turn spell on
+set exrc
+set secure
+"set spell spelllang=en_au       "turn spell on. FUck spell
 
 "Default to colour scheme set by wal, use F keys to change if it's shit
 let g:dracula_colorterm = 0 "remove grey shade background
@@ -216,7 +218,6 @@ else
     "let g:OmniSharp_server_use_mono = 1
     let g:OmniSharp_server_use_net6 = 1 "Had to set this to use .net7 sdk on emerald. msbuild too old
 endif
-let g:ale_linters = { 'cs': ['OmniSharp'] } "Tell ALE to use OmniSharp for linting C# files, and no other linters.
 augroup omnisharp_commands
     autocmd!
 
@@ -263,21 +264,21 @@ let g:ycm_filetype_blacklist = {
     \}
 
 ""ALE
-au FileType python  nmap <C-]> <Plug>(ale_go_to_definition)
-au FileType python  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
-au FileType python  nmap <Leader>dc <Plug>(ale_documentation)
-au FileType python  nmap <Leader>dp <Plug>(ale_hover)
-au FileType rust  nmap <C-]> <Plug>(ale_go_to_definition)
-au FileType rust  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
-au FileType rust  nmap <Leader>dc <Plug>(ale_documentation)
-au FileType rust  nmap <Leader>dp <Plug>(ale_hover)
+au FileType python,cpp,rust  nmap <C-]> <Plug>(ale_go_to_definition)
+au FileType python,cpp,rust nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
+au FileType python,cpp,rust  nmap <Leader>dc <Plug>(ale_documentation)
+au FileType python,cpp,rust  nmap <Leader>dp <Plug>(ale_hover)
 let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
 let g:ale_fixers = {
             \ 'python': ['isort', 'black'],
+            \ 'cpp': ['clang-format'],
             \ }
 let g:ale_linters = {
             \ 'python': ['ruff', 'mypy', 'pyright'],
+            \ 'cpp': ['clangd'],
+            \ 'cs': ['OmniSharp'],
+            \ 'c': ['clangtidy'],
             \ }
 let g:ale_fix_on_save = 1
 let g:ale_virtualenv_dir_names = ['.venv']
