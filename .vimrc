@@ -33,6 +33,8 @@ Plug 'ryanoasis/vim-devicons'                       " show icons in vim statusli
 Plug 'dense-analysis/ale'                           " linter
 Plug 'vim-test/vim-test'
 Plug 'mzlogin/vim-markdown-toc'                     " markdown TOC generator
+Plug 'puremourning/vimspector', { 'for': ['python', 'cpp'] }
+Plug 'szw/vim-maximizer'
 
 
 call plug#end()
@@ -83,9 +85,14 @@ set foldenable!                 "start with all folds open, close with <z-i>
 set textwidth=100               "sets line at which gq wraps text
 set completeopt=popup,menuone   "use popup window, not preview
 set t_RV=                       "fix issue with devicons/airline having junk
-set spell spelllang=en_au       "turn spell on
+"set spell spelllang=en_au       "turn spell on
 set exrc                        " allow per-directory vimrc
 set secure                      " disable unsafe commands in local vimrcs
+
+" use ripgrep instead of grep. Fixes binary/directory bullshit and not finding entries sometimes
+set grepprg=rg\ --vimgrep
+set grepformat=%f:%l:%c:%m
+
 
 
 let g:dracula_colorterm = 0 "remove grey shade background
@@ -211,6 +218,7 @@ let g:OmniSharp_timeout = 5                 "timeout in seconds to wait for a re
 let g:OmniSharp_translate_cygwin_wsl = 1    "needed to convert windows and linux paths
 let g:OmniSharp_server_use_mono = 0
 let g:ale_linters = { 'cs': ['OmniSharp'] } "Tell ALE to use OmniSharp for linting C# files, and no other linters.
+let g:ale_linters = {'c': ['clangtidy']}
 augroup omnisharp_commands
     autocmd!
 
@@ -257,10 +265,10 @@ let g:ycm_filetype_blacklist = {
     \}
 
 ""ALE
-au FileType python  nmap <C-]> <Plug>(ale_go_to_definition)
-au FileType python  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
-au FileType python  nmap <Leader>dc <Plug>(ale_documentation)
-au FileType python  nmap <Leader>dp <Plug>(ale_hover)
+au FileType python,cpp,c  nmap <C-]> <Plug>(ale_go_to_definition)
+au FileType python,cpp,c  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
+au FileType python,cpp,c  nmap <Leader>dc <Plug>(ale_documentation)
+au FileType python,cpp,c  nmap <Leader>dp <Plug>(ale_hover)
 let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
 let g:ale_fixers = {
@@ -310,7 +318,38 @@ let test#strategy = "make"
 noremap <leader>n :NERDTree %<cr>
 
 "" Fugitive
-nmap <leader>gl :Gclog<CR>
+noremap <leader>gl :Gclog<CR>
+noremap <silent> <leader>gs :Git<CR>:20wincmd_<CR>
+
+
+"" Vimspector
+let g:vimspector_enable_mappings = 'HUMAN'
+
+" mnemonic 'di' = 'debug inspect' (pick your own, if you prefer!)
+" for normal mode - the word under the cursor
+nmap <Leader>di <Plug>VimspectorBalloonEval
+" for visual mode, the visually selected text
+xmap <Leader>di <Plug>VimspectorBalloonEval
+nmap <LocalLeader><F11> <Plug>VimspectorUpFrame
+nmap <LocalLeader><F12> <Plug>VimspectorDownFrame
+nmap <LocalLeader>B     <Plug>VimspectorBreakpoints
+nmap <LocalLeader>D     <Plug>VimspectorDisassemble
+
+"| Key         | Mapping                                      | Function                                           |
+"|-------------|----------------------------------------------|----------------------------------------------------|
+"| F5          | <Plug>VimspectorContinue                     | Continue debugging / start debugging               |
+"| F3          | <Plug>VimspectorStop                         | Stop debugging                                     |
+"| F4          | <Plug>VimspectorRestart                      | Restart debugging with same configuration          |
+"| F6          | <Plug>VimspectorPause                        | Pause debuggee                                     |
+"| F9          | <Plug>VimspectorToggleBreakpoint             | Toggle breakpoint on current line                  |
+"| <leader>F9  | <Plug>VimspectorToggleConditionalBreakpoint  | Toggle conditional breakpoint or logpoint          |
+"| F8          | <Plug>VimspectorAddFunctionBreakpoint        | Add function breakpoint under cursor               |
+"| <leader>F8  | <Plug>VimspectorRunToCursor                  | Run to cursor                                      |
+"| F10         | <Plug>VimspectorStepOver                     | Step over                                          |
+"| F11         | <Plug>VimspectorStepInto                     | Step into                                          |
+"| F12         | <Plug>VimspectorStepOut                      | Step out of current function                       |
+
+
 
 "}}}
 
@@ -384,7 +423,7 @@ augroup END
 map <F2> :set number! <bar> set relativenumber! <CR>
 
 "Insert current date as YYYY-MM-DD Day format
-map <F3> :r! date +\%F" "\%A <CR> <bar>
+map <F9> :r! date +\%F" "\%A <CR> <bar>
 
 " Toggle spell
 map <F7> :set spell! <CR>
