@@ -141,11 +141,6 @@ au FileType cs set foldmarker={,}
 au FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
 au FileType cs set foldlevel=2
 au FileType cs set foldenable! "start with all folds open
-""msbuild for make
-if IsWSL()
-    au FileType cs set makeprg='/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2019/Professional/MSBuild/Current/Bin/MSBuild.exe'\ /nologo\ /v:q\ /property:Platform='x64',WarningLevel=0
-    au FileType cs set errorformat=\ %#%f(%l\\\,%c):\ %m
-endif
 
 "Python
 au FileType python set fdm=indent
@@ -284,7 +279,7 @@ let g:ale_virtualenv_dir_names = ['.venv']
 autocmd FileType vimwiki let b:ale_enabled = 0 " ALE chugs here
 
 
-"FZF
+"" FZF
 let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
 
 function! s:build_quickfix_list(lines)
@@ -425,14 +420,11 @@ map <F2> :set number! <bar> set relativenumber! <CR>
 "Insert current date as YYYY-MM-DD Day format
 map <F9> :r! date +\%F" "\%A <CR> <bar>
 
+"Wrap word in backticks
+nnoremap <F10> cw`<C-r>"`<Esc>
+
 " Toggle spell
 map <F7> :set spell! <CR>
-
-"Switch colorscheme to use wal
-map <F9> :colorscheme wal <CR>
-
-"Switch colorscheme to jellybeans
-map <F10> :colorscheme jellybeans <CR>
 
 " Allow saving of files as sudo when I forget to start vim using sudo.
 cmap w!! w !sudo tee /dev/null %
