@@ -189,8 +189,7 @@ syntax on
 let g:vimwiki_list = [{ 'path': '/home/wgb/vimwiki', 'auto_tags': 1 }]
 
 """folding
-let g:vimwiki_folding='custom'
-au BufNewFile,BufRead,BufReadPost *.wiki set fdm=syntax
+let g:vimwiki_folding='expr'
 au BufNewFile,BufRead,BufReadPost *.wiki set foldlevel=1
 
 ""Ctags
