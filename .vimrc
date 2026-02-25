@@ -313,7 +313,7 @@ noremap <leader>n :NERDTree %<cr>
 
 "" Fugitive
 noremap <leader>gl :Gclog<CR>
-noremap <silent> <leader>gs :Git<CR>:20wincmd_<CR>
+noremap <silent> <leader>gs :Git<CR>:only<CR>
 
 
 "" Vimspector
