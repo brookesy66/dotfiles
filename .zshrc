@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/will/.oh-my-zsh"
+export ZSH="/home/wgb/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -72,7 +72,7 @@ ZSH_THEME="will"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(vi-mode command-not-found colored-man-pages)
+plugins=(vi-mode command-not-found colored-man-pages cp)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -108,16 +108,27 @@ stty -ixon
 # path
 export PATH="${HOME}/.local/bin:$PATH"
 
+. "$HOME/.local/bin/env"
+export PATH="$HOME/.local/bin:$PATH"
+
+
+# browser
+export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
+export EDITOR=vi
+
 # add time to prompt
 RPROMPT='[%D{%K:%M:%S}] '$RPROMPT
 
 export PATH="$HOME/.poetry/bin:$PATH"
 
 # pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+# export PYENV_ROOT="$HOME/.pyenv"
+# command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
 
 #fzf
-source /usr/share/fzf/completion.zsh
-source /usr/share/fzf/key-bindings.zsh
+source /usr/share/doc/fzf/examples/completion.zsh
+source /usr/share/doc/fzf/examples/key-bindings.zsh
+
+# Losedows home
+export WHOME="/mnt/c/Users/wgb.PI"

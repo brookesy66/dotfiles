@@ -6,7 +6,7 @@ alias fvim='vim $(fzf)'
 alias fvi='fvim'
 alias dirs='dirs -v'
 
-alias home='cd /mnt/c/Users/wgb/'
+alias home='cd /mnt/c/Users/wgb.PI/'
 alias proj='cd /mnt/c/projects/'
 alias exp='explorer.exe .'
 alias psh='powershell.exe'
