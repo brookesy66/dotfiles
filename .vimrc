@@ -270,10 +270,10 @@ let g:ale_fixers = {
             \ 'cpp': ['clang-format'],
             \ }
 let g:ale_linters = {
-            \ 'python': ['ruff', 'mypy', 'pyright'],
-            \ 'cpp': ['clangd'],
             \ 'cs': ['OmniSharp'],
             \ 'c': ['clangtidy'],
+            \ 'python': ['ruff', 'mypy', 'pyright'],
+            \ 'cpp': ['clangd'],
             \ }
 let g:ale_fix_on_save = 1
 let g:ale_virtualenv_dir_names = ['.venv']
