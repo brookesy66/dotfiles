@@ -211,8 +211,6 @@ let g:OmniSharp_server_stdio = 1            "use the stdio OmniSharp-roslyn serv
 let g:OmniSharp_timeout = 5                 "timeout in seconds to wait for a response from the server
 let g:OmniSharp_translate_cygwin_wsl = 1    "needed to convert windows and linux paths
 let g:OmniSharp_server_use_mono = 0
-let g:ale_linters = { 'cs': ['OmniSharp'] } "Tell ALE to use OmniSharp for linting C# files, and no other linters.
-let g:ale_linters = {'c': ['clangtidy']}
 augroup omnisharp_commands
     autocmd!
 
@@ -270,6 +268,8 @@ let g:ale_fixers = {
             \ 'cpp': ['clang-format'],
             \ }
 let g:ale_linters = {
+            \ 'cs': ['OmniSharp'],
+            \ 'c': ['clangtidy'],
             \ 'python': ['ruff', 'mypy', 'pyright'],
             \ 'cpp': ['clangd'],
             \ }
