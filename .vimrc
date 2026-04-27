@@ -186,7 +186,10 @@ syntax on
 "let wiki_2 = {}
 "let wiki_2.path = '~/vimwiki/work/wgb-wiki'
 "let g:vimwiki_list = [wiki_1, wiki_2, { 'path': '~/vimwiki/', 'auto_tags': 1 }]
-let g:vimwiki_list = [{ 'path': '/home/wgb/vimwiki', 'auto_tags': 1 }]
+let g:vimwiki_list = [
+  \ { 'path': '/home/wgb/vimwiki',          'auto_tags': 1 },
+  \ { 'path': '/home/wgb/vimwiki/lonsdale', 'auto_tags': 1 },
+  \ ]
 
 """folding
 let g:vimwiki_folding='expr'

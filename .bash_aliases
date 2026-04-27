@@ -5,6 +5,7 @@ alias du='du -h'
 alias fvim='vim $(fzf)'
 alias fvi='fvim'
 alias dirs='dirs -v'
+alias clauded='claude --dangerously-skip-permissions'
 
 alias home='cd /mnt/c/Users/wgb.PI/'
 alias proj='cd /mnt/c/projects/'
@@ -12,4 +13,4 @@ alias exp='explorer.exe .'
 alias psh='powershell.exe'
 alias powershell='powershell.exe'
 alias cmd='cmd.exe'
-
+alias wchrome="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
