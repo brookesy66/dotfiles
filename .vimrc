@@ -53,6 +53,154 @@ function! IsWSL()
     endif
     return 0
 endfunction
+
+"Copy current file path to Windows clipboard
+command! CopyPath execute '!echo %:p | clip.exe'
+
+" Fast diary index for the daily wiki: avoids reading every file by
+" computing the weekday from the filename. ~instant for 1000+ entries.
+function! DiaryFastIndex() abort
+  let l:diary_path = expand('~/vimwiki/diary')
+  let l:files = glob(l:diary_path . '/[0-9]*.wiki', 0, 1)
+  let l:month_names = ['January','February','March','April','May','June',
+        \ 'July','August','September','October','November','December']
+
+  let l:by_year = {}
+  for l:f in l:files
+    let l:base = fnamemodify(l:f, ':t:r')
+    let l:m = matchlist(l:base, '\v^(\d{4})-(\d{2})-(\d{2})$')
+    if empty(l:m) | continue | endif
+    let [l:y, l:mo] = [l:m[1], l:m[2]]
+    if !has_key(l:by_year, l:y) | let l:by_year[l:y] = {} | endif
+    if !has_key(l:by_year[l:y], l:mo) | let l:by_year[l:y][l:mo] = [] | endif
+    call add(l:by_year[l:y][l:mo], l:base)
+  endfor
+
+  let l:lines = ['= Diary =']
+  for l:y in reverse(sort(keys(l:by_year)))
+    call add(l:lines, '== ' . l:y . ' ==')
+    call add(l:lines, '')
+    for l:mo in reverse(sort(keys(l:by_year[l:y])))
+      call add(l:lines, '=== ' . l:month_names[str2nr(l:mo) - 1] . ' ===')
+      for l:date in reverse(sort(l:by_year[l:y][l:mo]))
+        let l:weekday = strftime('%A', strptime('%Y-%m-%d', l:date))
+        call add(l:lines, '    - [[' . l:date . '|' . l:date . ' ' . l:weekday . ']]')
+      endfor
+      call add(l:lines, '')
+    endfor
+  endfor
+
+  call writefile(l:lines, l:diary_path . '/diary.wiki')
+  echo 'DiaryFastIndex: wrote ' . len(l:files) . ' entries'
+endfunction
+command! DiaryFastIndex call DiaryFastIndex()
+
+" Roll yesterday's diary forward into today's: carry over summary sections
+" (everything above == Yesterday ==), seed Yesterday's === Non-Summary ===
+" with yesterday's Today body, leave Yesterday and Today bodies empty.
+" Optional arg: alternate output path (for testing).
+function! DiaryRollover(...) abort
+  let l:diary_path = expand('~/vimwiki/diary')
+  let l:today = strftime('%Y-%m-%d')
+  let l:weekday = strftime('%A')
+  let l:target = a:0 >= 1 ? a:1 : (l:diary_path . '/' . l:today . '.wiki')
+
+  if a:0 == 0 && filereadable(l:target)
+    let l:meaningful = filter(readfile(l:target),
+          \ 'v:val !~# ''^=\s.*\s=\s*$'' && v:val !~# ''^\s*$''')
+    if !empty(l:meaningful)
+      echohl WarningMsg
+      echom 'DiaryRollover: ' . l:target . ' already has content — refusing'
+      echohl None
+      return
+    endif
+  endif
+
+  " Find most recent prior dated diary
+  let l:dates = []
+  for l:f in glob(l:diary_path . '/[0-9]*.wiki', 0, 1)
+    let l:b = fnamemodify(l:f, ':t:r')
+    if l:b =~# '^\d\{4\}-\d\{2\}-\d\{2\}$' && l:b < l:today
+      call add(l:dates, l:b)
+    endif
+  endfor
+
+  let l:out = ['= ' . l:today . ' ' . l:weekday . ' =', '']
+
+  if empty(l:dates)
+    call extend(l:out, ['== Notes ==', '', '== Active ==', '', '== Inactive ==',
+          \ '', '== Yesterday ==', '', '=== Non-Summary ===', '',
+          \ '== Today ==', ''])
+    call writefile(l:out, l:target)
+    if a:0 == 0 | execute 'edit ' . fnameescape(l:target) | endif
+    echo 'DiaryRollover: no prior diary, created stub'
+    return
+  endif
+
+  let l:source_date = sort(l:dates)[-1]
+  let l:source = readfile(l:diary_path . '/' . l:source_date . '.wiki')
+
+  " Parse source by H2 headings; capture preamble (above first H2) too
+  let l:sections = []
+  let l:cur_h = ''
+  let l:cur_b = []
+  for l:line in l:source
+    if l:line =~# '^==\s.\+\s==\s*$'
+      if !empty(l:cur_h)
+        call add(l:sections, [l:cur_h, l:cur_b])
+      endif
+      let l:cur_h = l:line
+      let l:cur_b = []
+    elseif l:line =~# '^=\s.\+\s=\s*$' && empty(l:cur_h)
+      " skip source's H1
+    else
+      if !empty(l:cur_h)
+        call add(l:cur_b, l:line)
+      endif
+    endif
+  endfor
+  if !empty(l:cur_h) | call add(l:sections, [l:cur_h, l:cur_b]) | endif
+
+  " Carry forward sections before == Yesterday ==; capture Today body
+  let l:today_body = []
+  let l:hit_yest = 0
+  for [l:h, l:b] in l:sections
+    if l:h =~# '^==\s\+Yesterday\s\+==\s*$'
+      let l:hit_yest = 1
+      continue
+    endif
+    if l:h =~# '^==\s\+Today\s\+==\s*$'
+      let l:today_body = l:b
+      continue
+    endif
+    if !l:hit_yest
+      call add(l:out, l:h)
+      call extend(l:out, l:b)
+    endif
+  endfor
+
+  " Trim leading/trailing blanks from Today body before nesting it
+  while !empty(l:today_body) && l:today_body[0] =~# '^\s*$'
+    call remove(l:today_body, 0)
+  endwhile
+  while !empty(l:today_body) && l:today_body[-1] =~# '^\s*$'
+    call remove(l:today_body, -1)
+  endwhile
+
+  call extend(l:out, ['== Yesterday ==', '', '=== Non-Summary ===', ''])
+  call extend(l:out, l:today_body)
+  call extend(l:out, ['', '== Today ==', ''])
+
+  call writefile(l:out, l:target)
+  if a:0 == 0
+    execute 'edit ' . fnameescape(l:target)
+    call search('^== Today ==$', 'w')
+    normal! 2j
+  endif
+  echo 'DiaryRollover: rolled forward from ' . l:source_date
+endfunction
+command! -nargs=? DiaryRollover call DiaryRollover(<f-args>)
+
 "}}}
 
 "Prefs{{{
@@ -190,6 +338,7 @@ let g:vimwiki_list = [
   \ { 'path': '/home/wgb/vimwiki',          'auto_tags': 1 },
   \ { 'path': '/home/wgb/vimwiki/lonsdale', 'auto_tags': 1 },
   \ ]
+
 
 """folding
 let g:vimwiki_folding='expr'
