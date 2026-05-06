@@ -132,3 +132,7 @@ source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 # Losedows home
 export WHOME="/mnt/c/Users/wgb.PI"
+
+# zoxide (used by yazi's `z` keybinding to fuzzy-jump dirs)
+export _ZO_FZF_OPTS="--height=100% --reverse --border --info=inline"
+eval "$(zoxide init zsh)"
