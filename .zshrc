@@ -127,8 +127,7 @@ export PATH="$HOME/.poetry/bin:$PATH"
 # eval "$(pyenv init -)"
 
 #fzf
-source /usr/share/doc/fzf/examples/completion.zsh
-source /usr/share/doc/fzf/examples/key-bindings.zsh
+eval "$(fzf --zsh)"
 
 # Losedows home
 export WHOME="/mnt/c/Users/wgb.PI"
