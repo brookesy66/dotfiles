@@ -394,6 +394,7 @@ nmap gm :LivedownToggle<CR>
 "autocmd BufWritePre *.py execute ':Black'
 
 ""YCM
+let g:ycm_clangd_args = ['--background-index-priority=normal']
 let g:ycm_always_populate_location_list = 1 "use location list
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_auto_hover=''
@@ -407,12 +408,19 @@ let g:ycm_filetype_blacklist = {
     \ 'leaderf': 1,
     \ 'vimwiki': 1
     \}
+""" using YCM for c/c++ as clangd server will conflict with ALE's
+au FileType cpp,c  nmap <C-]> :YcmCompleter GoToDefinition<CR>
+au FileType cpp,c  nmap <silent> <Leader>u :YcmCompleter GoToReferences<CR>
+au FileType cpp,c  nmap <Leader>dc :YcmCompleter GetDoc<CR>
+au FileType cpp,c  nmap <Leader>dp :YcmCompleter GetType<CR>
+au FileType cpp,c  nmap <Leader>dd :YcmDiags<CR>
+au FileType cpp,c  nmap <Leader>h :YcmCompleter GoToAlternateFile<CR>
 
-""ALE
-au FileType python,cpp,c  nmap <C-]> <Plug>(ale_go_to_definition)
-au FileType python,cpp,c  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
-au FileType python,cpp,c  nmap <Leader>dc <Plug>(ale_documentation)
-au FileType python,cpp,c  nmap <Leader>dp <Plug>(ale_hover)
+"" ALE
+au FileType python  nmap <C-]> <Plug>(ale_go_to_definition)
+au FileType python  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
+au FileType python  nmap <Leader>dc <Plug>(ale_documentation)
+au FileType python  nmap <Leader>dp <Plug>(ale_hover)
 let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
 let g:ale_fixers = {
@@ -421,9 +429,9 @@ let g:ale_fixers = {
             \ }
 let g:ale_linters = {
             \ 'cs': ['OmniSharp'],
-            \ 'c': ['clangtidy'],
             \ 'python': ['ruff', 'mypy', 'pyright'],
-            \ 'cpp': ['clangd'],
+            \ 'cpp': [],
+            \ 'c': [],
             \ }
 let g:ale_fix_on_save = 1
 let g:ale_virtualenv_dir_names = ['.venv']
