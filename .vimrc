@@ -360,9 +360,11 @@ let g:netrw_browsex_viewer= "xdg-open"
 filetype indent on                          "apparently required for the plugin to work
 let g:OmniSharp_highlighting = 0            "disable omnisharp highlighting
 let g:OmniSharp_server_stdio = 1            "use the stdio OmniSharp-roslyn server
-let g:OmniSharp_timeout = 5                 "timeout in seconds to wait for a response from the server
+let g:OmniSharp_timeout = 30                "timeout in seconds to wait for a response from the server
 let g:OmniSharp_translate_cygwin_wsl = 1    "needed to convert windows and linux paths
 let g:OmniSharp_server_use_mono = 0
+let g:OmniSharp_selector_ui = 'fzf'        "use fzf to pick solution when multiple exist
+let g:OmniSharp_prefer_global_sln = 1       "search up for .sln from file location
 augroup omnisharp_commands
     autocmd!
 
