@@ -414,7 +414,7 @@ let g:ycm_filetype_blacklist = {
 au FileType cpp,c  nmap <C-]> :YcmCompleter GoToDefinition<CR>
 au FileType cpp,c  nmap <silent> <Leader>u :YcmCompleter GoToReferences<CR>
 au FileType cpp,c  nmap <Leader>dc :YcmCompleter GetDoc<CR>
-au FileType cpp,c  nmap <Leader>dp :YcmCompleter GetType<CR>
+au FileType cpp,c  nmap <Leader>dp <plug>(YCMHover)
 au FileType cpp,c  nmap <Leader>dd :YcmDiags<CR>
 au FileType cpp,c  nmap <Leader>h :YcmCompleter GoToAlternateFile<CR>
 
