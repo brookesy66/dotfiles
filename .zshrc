@@ -125,3 +125,6 @@ eval "$(uv generate-shell-completion zsh)"
 
 # fixes colored-man-pages plugin not working
 export GROFF_NO_SGR=1
+
+# zoxide
+eval "$(zoxide init zsh)"
