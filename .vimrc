@@ -257,6 +257,14 @@ let g:ycm_filetype_blacklist = {
     \ 'leaderf': 1,
     \ 'vimwiki': 1
     \}
+let g:ycm_language_server =
+    \ [
+    \   {
+    \     'name': 'lua',
+    \     'cmdline': ['lua-language-server'],
+    \     'filetypes': ['lua'],
+    \   },
+    \ ]
 
 ""ALE
 au FileType python,cpp,rust,c  nmap <C-]> <Plug>(ale_go_to_definition)
