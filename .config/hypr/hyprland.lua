@@ -5,7 +5,7 @@
 -- NOTE: if this file exists, Hyprland loads it INSTEAD of hyprland.conf.
 -- To fall back to the old config, rename/remove this file and restart Hyprland.
 
-hl.config({ debug = { disable_logs = false } })
+--hl.config({ debug = { disable_logs = false } })
 
 
 ------------------
@@ -146,9 +146,13 @@ hl.config({
     dwindle = {
         preserve_split       = true,
         special_scale_factor = 0.98,
+        force_split          = 2,
     },
     master = {
         new_status = "master",
+    },
+    scrolling = {
+        direction = "down"
     },
     misc = {
         force_default_wallpaper = -1,
@@ -315,6 +319,8 @@ hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("hyprshot -m region --clipboa
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
+
+hl.workspace_rule( { workspace = "10", layout = "scrolling" } )
 
 -- https://wiki.hypr.land/Configuring/Basics/Window-Rules/
 hl.window_rule({
