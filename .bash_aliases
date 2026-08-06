@@ -2,7 +2,6 @@ alias icat="kitty +kitten icat"
 
 alias locate=plocate
 alias ll='ls -alFh'
-alias config='git -C ~/dotfiles'
 alias paclog='paclog -c'
 alias grep='grep -I --color'
 alias du='du -h'
