@@ -1,4 +1,4 @@
-source "gpg -d $HOME/.mutt/secrets.gpg |"
+source "gpg -dq $HOME/.mutt/secrets.gpg |"
 
 set ssl_starttls=yes
 set ssl_force_tls=yes
@@ -17,6 +17,7 @@ set smtp_url = 'smtps://wbrookes66@smtp.gmail.com:465'
 set smtp_pass = $my_pass
 set move = no
 set imap_keepalive = 900
+set record = "~/.mutt/sent"
 
 set sort=threads
 set sort_browser=date

@@ -42,3 +42,10 @@
 
 [url "git@gitlab.pi.planetinnovation.com.au:"]
     insteadof = https://gitlab.pi.planetinnovation.com.au
+[credential]
+	helper = /usr/lib/git-core/git-credential-libsecret
+
+[includeIf "hasconfig:remote.*.url:git@gitlab.pi.planetinnovation.com.au:*/**"]
+	path = ~/.gitconfig-work
+[includeIf "hasconfig:remote.*.url:https://gitlab.pi.planetinnovation.com.au/**"]
+	path = ~/.gitconfig-work

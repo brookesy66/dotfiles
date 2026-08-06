@@ -111,7 +111,6 @@ export PATH="${HOME}/.local/bin:$PATH"
 # add time to prompt
 RPROMPT='[%D{%K:%M:%S}] '$RPROMPT
 
-export PATH="$HOME/.poetry/bin:$PATH"
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
@@ -128,3 +127,8 @@ export GROFF_NO_SGR=1
 
 # zoxide
 eval "$(zoxide init zsh)"
+
+# History: big, shared across sessions, deduped
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS

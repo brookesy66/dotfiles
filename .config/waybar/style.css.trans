@@ -88,6 +88,7 @@ button:hover {
 #pulseaudio,
 #wireplumber,
 #custom-media,
+#mpris,
 #tray,
 #mode,
 #idle_inhibitor,
@@ -215,10 +216,15 @@ label:focus {
     background-color: #f53c3c;
 }
 
-#custom-media {
+#custom-media,
+#mpris {
     /* background-color: #66cc99; */
     /* color: #2a5c45; */
     min-width: 100px;
+}
+
+#mpris.spotify {
+    color: #66cc99;
 }
 
 #custom-media.custom-spotify.color {
