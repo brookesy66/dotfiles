@@ -12,7 +12,7 @@ endif
 call plug#begin('~/.vim/plugged')
 
 Plug 'vimwiki/vimwiki'                              " wiki/diary plugin
-Plug 'ntpeters/vim-better-whitespace'               " better handling of whitespace
+"Plug 'ntpeters/vim-better-whitespace'               " better handling of whitespace
 Plug 'nanotech/jellybeans.vim'                      " a nice colorscheme
 Plug 'chrisbra/csv.vim'                             " CSV file manipulation
 Plug 'OmniSharp/omnisharp-vim'                      " C# IDE-like plugin
@@ -152,7 +152,7 @@ au FileType python set textwidth=80
 "===========
 
 ""auto remove whitespace
-autocmd BufEnter * EnableStripWhitespaceOnSave
+"autocmd BufEnter * EnableStripWhitespaceOnSave
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
 let g:strip_whitespace_confirm=0
