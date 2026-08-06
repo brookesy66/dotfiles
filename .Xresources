@@ -30,7 +30,12 @@ Xft.rgba: rgb
 ! Xft.dpi:    94
 !
 ! this is for 4k screen
-Xft.dpi:    163
+!Xft.dpi:    163
+
+! 96 * 1.5 = 144, matches Hyprland monitor scale 1.5 on DP-1. With
+! QT_AUTO_SCREEN_SCALE_FACTOR=1 (env.lua) this makes XWayland Qt apps
+! (e.g. VLC) render at 1.5x instead of tiny. Merged by autostart.lua.
+Xft.dpi:    144
 
 ! calculated. Not sure about this
 !Xft.dpi: 104

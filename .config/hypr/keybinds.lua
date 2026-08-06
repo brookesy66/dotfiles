@@ -9,7 +9,8 @@ local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + RETURN",        hl.dsp.exec_cmd(p.terminal))
 hl.bind(mainMod .. " + SHIFT + Q",     hl.dsp.window.close())
-hl.bind(mainMod .. " + SHIFT + E",     hl.dsp.exit())
+-- confirm before exiting (hyprctl dispatch args are evaluated as Lua here)
+hl.bind(mainMod .. " + SHIFT + E",     hl.dsp.exec_cmd([[sh -c '[ "$(printf "No\nYes" | wofi --dmenu -p "Exit Hyprland?")" = "Yes" ] && hyprctl dispatch "hl.dsp.exit()"']]))
 hl.bind(mainMod .. " + M",             hl.dsp.exec_cmd(p.fileManager))
 hl.bind(mainMod .. " + SPACE",         hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + D",             hl.dsp.exec_cmd(p.menu))
@@ -55,6 +56,9 @@ end
 -- Groups
 hl.bind(mainMod .. " + t", hl.dsp.group.toggle())
 
+-- Clipboard history (cliphist, populated by wl-paste watchers in autostart)
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd([[sh -c 'cliphist list | wofi --dmenu -p "Clipboard" | cliphist decode | wl-copy']]))
+
 -- Special workspace (scratchpad)
 hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
@@ -64,10 +68,10 @@ hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
 
 -- Resize active window
-hl.bind(mainMod .. " + SHIFT + o", hl.dsp.window.resize({ x = 35,  y = 0,   relative = true }))
-hl.bind(mainMod .. " + SHIFT + y", hl.dsp.window.resize({ x = -35, y = 0,   relative = true }))
-hl.bind(mainMod .. " + SHIFT + i", hl.dsp.window.resize({ x = 0,   y = -35, relative = true }))
-hl.bind(mainMod .. " + SHIFT + u", hl.dsp.window.resize({ x = 0,   y = 35,  relative = true }))
+hl.bind(mainMod .. " + SHIFT + o", hl.dsp.window.resize({ x = 45,  y = 0,   relative = true }))
+hl.bind(mainMod .. " + SHIFT + y", hl.dsp.window.resize({ x = -45, y = 0,   relative = true }))
+hl.bind(mainMod .. " + SHIFT + i", hl.dsp.window.resize({ x = 0,   y = -45, relative = true }))
+hl.bind(mainMod .. " + SHIFT + u", hl.dsp.window.resize({ x = 0,   y = 45,  relative = true }))
 
 -- Move/resize windows with mainMod + LMB/RMB and dragging
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })

@@ -36,8 +36,9 @@ hl.config({
 
         blur = {
             enabled  = true,
-            size     = 8,
-            passes   = 1,
+            size     = 5,
+            passes   = 3,
+            popups   = true,
             vibrancy = 0.1696,
         },
     },
@@ -72,6 +73,23 @@ hl.animation({ leaf = "workspacesIn",  enabled = true, speed = 1.21, bezier = "a
 hl.animation({ leaf = "workspacesOut", enabled = true, speed = 1.94, bezier = "almostLinear", style = "fade" })
 
 hl.config({
+    -- groups (SUPER+T): match the active-border gradient, readable groupbar
+    group = {
+        col = {
+            border_active   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
+            border_inactive = "rgba(595959aa)",
+        },
+        groupbar = {
+            font_size  = 12,
+            height     = 20,
+            gradients  = false,
+            text_color = "rgba(ffffffff)",
+            col = {
+                active   = "rgba(33ccffaa)",
+                inactive = "rgba(59595966)",
+            },
+        },
+    },
     dwindle = {
         preserve_split       = true,
         special_scale_factor = 0.98,
@@ -81,10 +99,12 @@ hl.config({
         new_status = "master",
     },
     scrolling = {
-        direction = "down"
+        direction = "down",
+        column_width = "0.9"
     },
     misc = {
         force_default_wallpaper = -1,
         disable_hyprland_logo   = false,
+        vrr                     = 2, -- adaptive sync for fullscreen apps (TV gaming)
     },
 })
