@@ -60,4 +60,15 @@ function M.toggle_dp2()
     end
 end
 
+-- SUPER+F: true fullscreen ignores gaps and would cover the whole monitor, so on
+-- a special workspace maximize instead, which respects its gaps_out rule.
+function M.fullscreen()
+    local w = hl.get_active_window()
+    if w and w.workspace and w.workspace.special then
+        hl.dispatch(hl.dsp.window.fullscreen({ mode = "maximized" }))
+    else
+        hl.dispatch(hl.dsp.window.fullscreen())
+    end
+end
+
 return M

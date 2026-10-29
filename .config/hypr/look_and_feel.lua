@@ -91,9 +91,8 @@ hl.config({
         },
     },
     dwindle = {
-        preserve_split       = true,
-        special_scale_factor = 0.98,
-        force_split          = 2,
+        preserve_split = true,
+        force_split    = 2,
     },
     master = {
         new_status = "master",
@@ -108,3 +107,11 @@ hl.config({
         vrr                     = 2, -- adaptive sync for fullscreen apps (TV gaming)
     },
 })
+
+-- Shrink the special workspace (SUPER+S) so it's visually distinct.
+-- dwindle/master:special_scale_factor is deprecated as of 0.57 and does nothing;
+-- per-workspace gaps_out replaces it. gaps_out also bounds maximized windows, so
+-- SUPER+F maximizes instead of fullscreening there (see functions.lua). True
+-- fullscreen always covers the whole monitor and ignores gaps.
+-- Values are logical px: ~2.5% of DP-1's 2560x1440 on each side (~0.95 scale).
+hl.workspace_rule({ workspace = "special:magic", gaps_out = { top = 36, right = 64, bottom = 36, left = 64 } })

@@ -16,7 +16,7 @@ hl.bind(mainMod .. " + SPACE",         hl.dsp.window.float({ action = "toggle" }
 hl.bind(mainMod .. " + D",             hl.dsp.exec_cmd(p.menu))
 hl.bind(mainMod .. " + P",             hl.dsp.window.pseudo())          -- dwindle
 hl.bind(mainMod .. " + Q",             hl.dsp.layout("togglesplit"))    -- dwindle
-hl.bind(mainMod .. " + F",             hl.dsp.window.fullscreen())
+hl.bind(mainMod .. " + F",             fn.fullscreen) -- maximizes on special workspaces (see functions.lua)
 hl.bind(mainMod .. " + CONTROL + M",   hl.dsp.exec_cmd("pavucontrol"))
 hl.bind(mainMod .. " + TAB",           hl.dsp.focus({ workspace = "previous" }))
 hl.bind(mainMod .. " + SHIFT + R",     hl.dsp.exec_cmd("hyprctl reload"))
