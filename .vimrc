@@ -135,14 +135,29 @@ au FileType python setlocal fdm=indent
 au FileType python setlocal foldlevel=1
 au FileType python setlocal textwidth=80
 
-"Vimwiki folding
+"Vimwiki
 au BufNewFile,BufRead,BufReadPost *.wiki setlocal foldlevel=1
+"ALE and YCM are both off here (too slow), so strip whitespace and complete
+"file paths natively. <C-f> in insert mode completes relative to the file.
+au BufWritePre *.wiki call s:StripWhitespace()
+au FileType vimwiki setlocal completefunc=WikiPathComplete
+au FileType vimwiki inoremap <buffer> <C-f> <C-x><C-u>
+
+"YCM mappings for C/C++ (buffer-local so they don't clobber tags elsewhere).
+"YCM's clangd is the only language server for C/C++; ALE is disabled for them.
+au FileType cpp,c  nmap <buffer> <C-]> :YcmCompleter GoToDefinition<CR>
+au FileType cpp,c  nmap <buffer> <silent> <Leader>u :YcmCompleter GoToReferences<CR>
+au FileType cpp,c  nmap <buffer> <Leader>dc :YcmCompleter GetDoc<CR>
+au FileType cpp,c  nmap <buffer> <Leader>dp <plug>(YCMHover)
+au FileType cpp,c  nmap <buffer> <Leader>dd :YcmDiags<CR>
+au FileType cpp,c  nmap <buffer> <Leader>h :YcmCompleter GoToAlternateFile<CR>
+au FileType cpp,c  nmap <buffer> <Leader>rn :YcmCompleter RefactorRename<Space>
 
 "ALE mappings (buffer-local so they don't clobber tags in other filetypes)
-au FileType python,cpp,rust,c  nmap <buffer> <C-]> <Plug>(ale_go_to_definition)
-au FileType python,cpp,rust,c  nmap <buffer> <silent> <Leader>u :ALEFindReferences -quickfix<CR>
-au FileType python,cpp,rust,c  nmap <buffer> <Leader>dc <Plug>(ale_documentation)
-au FileType python,cpp,rust,c  nmap <buffer> <Leader>dp <Plug>(ale_hover)
+au FileType python,rust  nmap <buffer> <C-]> <Plug>(ale_go_to_definition)
+au FileType python,rust  nmap <buffer> <silent> <Leader>u :ALEFindReferences -quickfix<CR>
+au FileType python,rust  nmap <buffer> <Leader>dc <Plug>(ale_documentation)
+au FileType python,rust  nmap <buffer> <Leader>dp <Plug>(ale_hover)
 au FileType vimwiki let b:ale_enabled = 0 " ALE chugs here
 
 augroup END
@@ -170,6 +185,34 @@ colorscheme jellybeans
 ""VimWiki
 nmap <Leader>wv <Plug>VimwikiVSplitLink
 nmap <Leader>wt <Plug>VimwikiTabnewLink
+
+"strip trailing whitespace and trailing blank lines, keeping the view
+function! s:StripWhitespace() abort
+    let l:view = winsaveview()
+    silent! keeppatterns %s/\s\+$//e
+    silent! keeppatterns %s/\n\+\%$//e
+    call winrestview(l:view)
+endfunction
+
+"completefunc: complete paths relative to the current file's directory
+"(absolute and ~ paths work too). .wiki is dropped as vimwiki links omit it.
+function! WikiPathComplete(findstart, base) abort
+    if a:findstart
+        return match(getline('.')[: col('.') - 2], '\f*$')
+    endif
+    let l:abs = a:base =~# '^[/~]'
+    let l:dir = l:abs ? '' : expand('%:p:h') . '/'
+    let l:res = []
+    for l:p in glob(l:dir . a:base . '*', 0, 1)
+        let l:word = l:abs ? a:base . l:p[len(expand(a:base)):] : l:p[len(l:dir):]
+        if isdirectory(l:p)
+            call add(l:res, {'word': l:word . '/', 'menu': '[dir]'})
+        else
+            call add(l:res, {'word': substitute(l:word, '\.wiki$', '', ''), 'menu': '[file]'})
+        endif
+    endfor
+    return l:res
+endfunction
 
 """multiple
 let wiki_1 = {}
@@ -227,6 +270,7 @@ let g:livedown_browser = "firefox"
 nmap gm :LivedownToggle<CR>
 
 ""YCM
+let g:ycm_clangd_args = ['--background-index-priority=normal']
 let g:ycm_always_populate_location_list = 1 "use location list
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_auto_hover=''
@@ -259,9 +303,9 @@ let g:ale_fixers = {
             \ }
 let g:ale_linters = {
             \ 'cs': ['OmniSharp'],
-            \ 'c': ['clangtidy'],
             \ 'python': ['ruff', 'mypy', 'pyright'],
-            \ 'cpp': ['clangd'],
+            \ 'cpp': [],
+            \ 'c': [],
             \ }
 let g:ale_fix_on_save = 1
 let g:ale_virtualenv_dir_names = ['.venv']
