@@ -1,0 +1,8 @@
+# mutt local mail cache (headers and message bodies)
+.mutt/cache/
+
+# third-party plugin clones
+.config/ranger/plugins/
+
+__pycache__/
+*.orig
