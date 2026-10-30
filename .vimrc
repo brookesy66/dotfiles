@@ -18,11 +18,9 @@ Plug 'chrisbra/csv.vim'                             " CSV file manipulation
 Plug 'OmniSharp/omnisharp-vim'                      " C# IDE-like plugin
 Plug 'tpope/vim-fugitive'                           " powerful Git plugin
 Plug 'junegunn/gv.vim'                              " Git commit browser - uses fugitive
-Plug 'git://github.com/shime/vim-livedown'          " markdown plugin
-Plug 'psf/black', { 'branch': 'stable' }            " python formatting
+Plug 'shime/vim-livedown'                           " markdown plugin
 Plug 'Valloric/YouCompleteMe'                       " auto completion
 "Plug 'vim/killersheep'                             " funny game
-Plug 'dylanaraps/wal.vim'                           " sync colorscheme from pywal
 Plug 'dracula/vim', { 'as': 'dracula' }             " dracula colorscheme
 Plug 'lifepillar/vim-solarized8'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fuzzy search finder
@@ -41,34 +39,26 @@ Plug 'szw/vim-maximizer'
 call plug#end()
 "}}}
 
-"Functions{{{
-"=============
-
-"function to check WSL
-function! IsWSL()
-    if has("unix")
-        let lines = readfile("/proc/version")
-        if lines[0] =~ "Microsoft"
-            return 1
-        endif
-    endif
-    return 0
-endfunction
-"}}}
-
 "Prefs{{{
 "=========
+
+let mapleader = " "             "set before any <leader> mappings are defined
 
 "set softtabstop=2 shiftwidth=2 tabstop=2 expandtab " From VTX
 set shiftwidth=4 tabstop=4 expandtab   		        " Clayton's standard, using @ Grey/PI
 "set tabstop=8 shiftwidth=8                         " kernel standard
-let g:netrw_browsex_viewer= "xdg-open"
 
 set relativenumber
 set number
 set background=dark
 set t_Co=256
-set history=50
+set history=1000
+set scrolloff=3                 "keep some context above/below the cursor
+set undofile                    "persistent undo across sessions
+set undodir=~/.vim/undo
+if !isdirectory(expand(&undodir))
+    call mkdir(expand(&undodir), 'p')
+endif
 set hlsearch
 set autoread                    "automatically refresh files not edited by vim while open
 set ruler
@@ -84,7 +74,7 @@ set splitbelow splitright       "more natural window split behaviour
 set wildmenu                    "cool bar when tab completing
 set wildoptions=pum             "popup wildmenu
 set fdm=syntax                  "folding by syntax
-set foldenable!                 "start with all folds open, close with <z-i>
+set nofoldenable                "start with all folds open, close with <z-i>
 set textwidth=100               "sets line at which gq wraps text
 set completeopt=popup,menuone   "use popup window, not preview
 set t_RV=                       "fix issue with devicons/airline having junk
@@ -92,35 +82,35 @@ set exrc
 set secure
 "set spell spelllang=en_au       "turn spell on. FUck spell
 
-"Default to colour scheme set by wal, use F keys to change if it's shit
-let g:dracula_colorterm = 0 "remove grey shade background
-colorscheme jellybeans
-
-"Settings for colorcolumn, only set if coding
-au FileType c,cs,cpp,python,rust,sh set colorcolumn=81,101
-"highlight ColorColumn ctermbg=234 " looks like removing this ensures cc is
-"that grey colour always
-
 "Omnicompletion
-filetype plugin on
 set omnifunc=syntaxcomplete#Complete
+
+"Built-in optional packages shipped with Vim 9.2
+packadd! comment                "gc/gcc to toggle comments
+packadd! hlyank                 "briefly highlight yanked text
 
 "}}}
 
 "Autocommands{{{
 "===============
 
+augroup vimrc
+autocmd!
+
+"Settings for colorcolumn, only set if coding
+au FileType c,cs,cpp,python,rust,sh setlocal colorcolumn=81,101
+
 "Set arduino syntax to c
-au BufNewFile,BufRead,BufReadPost *.ino set syntax=c
+au BufNewFile,BufRead,BufReadPost *.ino setlocal syntax=c
 
 "Makefile syntax
-autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
+au FileType make setlocal noexpandtab shiftwidth=8 softtabstop=0
 
 "Addition of wsd as plantuml files
-autocmd BufNewFile,BufRead *.wsd set syntax=plantuml
+au BufNewFile,BufRead *.wsd setlocal syntax=plantuml
 
 "XML syntax for XAML files
-autocmd BufNewFile,BufRead *.xaml set syntax=xml
+au BufNewFile,BufRead *.xaml setlocal syntax=xml
 
 "When editing a file, always jump to the last known cursor position.
 "Don't do it when the position is invalid or when inside an event handler
@@ -134,28 +124,33 @@ autocmd BufReadPost *
 
 "C# Settings:
 ""Folding : http://vim.wikia.com/wiki/Syntax-based_folding, see comment by Ostrygen
-au FileType cs set foldmethod=marker
-au FileType cs set foldmarker={,}
-au FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
-au FileType cs set foldlevel=2
-au FileType cs set foldenable! "start with all folds open
+au FileType cs setlocal foldmethod=marker
+au FileType cs setlocal foldmarker={,}
+au FileType cs setlocal foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
+au FileType cs setlocal foldlevel=2
+au FileType cs setlocal nofoldenable "start with all folds open
 
 "Python
-au FileType python set fdm=indent
-au FileType python set foldlevel=1
-au FileType python set textwidth=80
+au FileType python setlocal fdm=indent
+au FileType python setlocal foldlevel=1
+au FileType python setlocal textwidth=80
 
+"Vimwiki folding
+au BufNewFile,BufRead,BufReadPost *.wiki setlocal foldlevel=1
+
+"ALE mappings (buffer-local so they don't clobber tags in other filetypes)
+au FileType python,cpp,rust,c  nmap <buffer> <C-]> <Plug>(ale_go_to_definition)
+au FileType python,cpp,rust,c  nmap <buffer> <silent> <Leader>u :ALEFindReferences -quickfix<CR>
+au FileType python,cpp,rust,c  nmap <buffer> <Leader>dc <Plug>(ale_documentation)
+au FileType python,cpp,rust,c  nmap <buffer> <Leader>dp <Plug>(ale_hover)
+au FileType vimwiki let b:ale_enabled = 0 " ALE chugs here
+
+augroup END
 
 ":}}}
 
 "Plugins{{{
 "===========
-
-""auto remove whitespace
-"autocmd BufEnter * EnableStripWhitespaceOnSave
-let g:better_whitespace_enabled=1
-let g:strip_whitespace_on_save=1
-let g:strip_whitespace_confirm=0
 
 ""jellybeans
 let g:jellybeans_use_term_italics=0
@@ -167,16 +162,14 @@ let g:jellybeans_overrides = {
 \}
 """uncomment below & background dict for disabling shaded black background
 if has('termguicolors') && &termguicolors
-        let g:jellybeans_overrides['background']['guibg'] = 'none'
-    endif
+    let g:jellybeans_overrides['background']['guibg'] = 'none'
+endif
+"must come after the overrides above or they are ignored
+colorscheme jellybeans
 
 ""VimWiki
 nmap <Leader>wv <Plug>VimwikiVSplitLink
 nmap <Leader>wt <Plug>VimwikiTabnewLink
-" required for it to work
-set nocompatible
-filetype plugin on
-syntax on
 
 """multiple
 let wiki_1 = {}
@@ -187,7 +180,6 @@ let g:vimwiki_list = [wiki_1, wiki_2]
 
 """folding
 let g:vimwiki_folding='expr'
-au BufNewFile,BufRead,BufReadPost *.wiki set foldlevel=1
 
 ""Ctags
 set tags=./tags,tags;$HOME
@@ -202,17 +194,11 @@ let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro' "line numbers
 let g:netrw_browsex_viewer= "xdg-open"
 
 ""OmniSharp
-filetype indent on                          "apparently required for the plugin to work
 let g:OmniSharp_highlighting = 0            "disable omnisharp highlighting
 let g:OmniSharp_server_stdio = 1            "use the stdio OmniSharp-roslyn server
 let g:OmniSharp_timeout = 5                 "timeout in seconds to wait for a response from the server
-if IsWSL()
-    let g:OmniSharp_translate_cygwin_wsl = 1    "needed to convert windows and linux paths
-    let g:OmniSharp_server_use_mono = 0
-else
-    "let g:OmniSharp_server_use_mono = 1
-    let g:OmniSharp_server_use_net6 = 1 "Had to set this to use .net7 sdk on emerald. msbuild too old
-endif
+"let g:OmniSharp_server_use_mono = 1
+let g:OmniSharp_server_use_net6 = 1 "Had to set this to use .net7 sdk on emerald. msbuild too old
 augroup omnisharp_commands
     autocmd!
 
@@ -240,9 +226,6 @@ augroup END
 let g:livedown_browser = "firefox"
 nmap gm :LivedownToggle<CR>
 
-""black python formatter
-"autocmd BufWritePre *.py execute ':Black'
-
 ""YCM
 let g:ycm_always_populate_location_list = 1 "use location list
 let g:ycm_autoclose_preview_window_after_completion = 1
@@ -266,14 +249,11 @@ let g:ycm_language_server =
     \   },
     \ ]
 
-""ALE
-au FileType python,cpp,rust,c  nmap <C-]> <Plug>(ale_go_to_definition)
-au FileType python,cpp,rust,c  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
-au FileType python,cpp,rust,c  nmap <Leader>dc <Plug>(ale_documentation)
-au FileType python,cpp,rust,c  nmap <Leader>dp <Plug>(ale_hover)
+""ALE (mappings are in the Autocommands section)
 let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
 let g:ale_fixers = {
+            \ '*': ['trim_whitespace', 'remove_trailing_lines'],
             \ 'python': ['isort', 'black'],
             \ 'cpp': ['clang-format'],
             \ }
@@ -285,7 +265,6 @@ let g:ale_linters = {
             \ }
 let g:ale_fix_on_save = 1
 let g:ale_virtualenv_dir_names = ['.venv']
-autocmd FileType vimwiki let b:ale_enabled = 0 " ALE chugs here
 
 
 "" FZF
@@ -306,7 +285,7 @@ let g:fzf_action = {
 " some cheeky shortcuts
 noremap <leader>f :Files<cr>
 noremap <leader>b :Buffers<cr>
-noremap <leader>a :Ag<cr>
+noremap <leader>a :Rg<cr>
 noremap <leader>l :Lines<cr>
 
 
@@ -424,35 +403,24 @@ augroup END
 "============
 
 "Toggle number lines
-map <F2> :set number! <bar> set relativenumber! <CR>
+nnoremap <F2> :set number! <bar> set relativenumber!<CR>
 
 "Insert current date as YYYY-MM-DD Day format
-map <F9> :r! date +\%F" "\%A <CR> <bar>
+nnoremap <F9> :r! date +\%F" "\%A<CR>
 
 "Wrap word in backticks
 nnoremap <F10> cw`<C-r>"`<Esc>
 
 " Toggle spell
-map <F7> :set spell! <CR>
-
-"Switch colorscheme to use wal
-map <F9> :colorscheme wal <CR>
-
-"Switch colorscheme to jellybeans
-map <F10> :colorscheme jellybeans <CR>
+nnoremap <F7> :set spell!<CR>
 
 " Allow saving of files as sudo when I forget to start vim using sudo.
-cmap w!! w !sudo tee /dev/null %
+cnoremap w!! w !sudo tee /dev/null %
 
 "Tmux-like resizing shortcuts
 noremap <C-w><C-y> <C-w>10<
 noremap <C-w><C-o> <C-w>10>
 noremap <C-w><C-u> <C-w>10-
 noremap <C-w><C-i> <C-w>10+
-
-nnoremap <SPACE> <Nop>
-map <Space> <Leader>
-"let mapleader = " "
-let mapleader = " "
 
 "}}}
