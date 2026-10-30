@@ -13,16 +13,14 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'ntpeters/vim-better-whitespace'               " better handling of whitespace
 Plug 'nanotech/jellybeans.vim'                      " a nice colorscheme
-Plug 'chrisbra/csv.vim'                            " CSV file manipulation
+Plug 'chrisbra/csv.vim'                             " CSV file manipulation
 Plug 'vimwiki/vimwiki'                              " wiki/diary plugin
 Plug 'OmniSharp/omnisharp-vim'                      " C# IDE-like plugin
 Plug 'tpope/vim-fugitive'                           " powerful Git plugin
 Plug 'junegunn/gv.vim'                              " Git commit browser - uses fugitive
 Plug 'shime/vim-livedown'                           " markdown plugin
-Plug 'psf/black', { 'branch': 'stable' }            " python formatting
 Plug 'Valloric/YouCompleteMe'                       " auto completion
 "Plug 'vim/killersheep'                             " funny game
-Plug 'dylanaraps/wal.vim'                           " sync colorscheme from pywal
 Plug 'dracula/vim', { 'as': 'dracula' }             " dracula colorscheme
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " fuzzy search finder
 Plug 'junegunn/fzf.vim'                             " fuzzy search finder
@@ -42,17 +40,6 @@ call plug#end()
 
 "Functions{{{
 "=============
-
-"function to check WSL
-function! IsWSL()
-    if has("unix")
-        let lines = readfile("/proc/version")
-        if lines[0] =~ "Microsoft"
-            return 1
-        endif
-    endif
-    return 0
-endfunction
 
 "Copy current file path to Windows clipboard
 command! CopyPath execute '!echo %:p | clip.exe'
@@ -206,6 +193,8 @@ command! -nargs=? DiaryRollover call DiaryRollover(<f-args>)
 "Prefs{{{
 "=========
 
+let mapleader = " "             "set before any <leader> mappings are defined
+
 "set softtabstop=2 shiftwidth=2 tabstop=2 expandtab " From VTX
 set shiftwidth=4 tabstop=4 expandtab   		        " Clayton's standard, using @ Grey/PI
 "set tabstop=8 shiftwidth=8                         " kernel standard
@@ -214,7 +203,13 @@ set relativenumber
 set number
 set background=dark
 set t_Co=256
-set history=50
+set history=1000
+set scrolloff=3                 "keep some context above/below the cursor
+set undofile                    "persistent undo across sessions
+set undodir=~/.vim/undo
+if !isdirectory(expand(&undodir))
+    call mkdir(expand(&undodir), 'p')
+endif
 set hlsearch
 set autoread                    "automatically refresh files not edited by vim while open
 set ruler
@@ -228,8 +223,9 @@ set smartcase                   "smartcase searching
 set hidden                      "hides buffer if it is abandoned
 set splitbelow splitright       "more natural window split behaviour
 set wildmenu                    "cool bar when tab completing
+set wildoptions=pum             "popup wildmenu
 set fdm=syntax                  "folding by syntax
-set foldenable!                 "start with all folds open, close with <z-i>
+set nofoldenable                "start with all folds open, close with <z-i>
 set textwidth=100               "sets line at which gq wraps text
 set completeopt=popup,menuone   "use popup window, not preview
 set t_RV=                       "fix issue with devicons/airline having junk
@@ -241,36 +237,35 @@ set secure                      " disable unsafe commands in local vimrcs
 set grepprg=rg\ --vimgrep
 set grepformat=%f:%l:%c:%m
 
-
-
-let g:dracula_colorterm = 0 "remove grey shade background
-colorscheme jellybeans
-
-"Settings for colorcolumn, only set if coding
-au FileType c,cs,cpp,python,rust,sh set colorcolumn=81,101
-"highlight ColorColumn ctermbg=234 " looks like removing this ensures cc is
-"that grey colour always
-
 "Omnicompletion
-filetype plugin on
 set omnifunc=syntaxcomplete#Complete
+
+"Built-in optional packages (silent! as they need a recent Vim 9.1+)
+silent! packadd! comment        "gc/gcc to toggle comments
+silent! packadd! hlyank         "briefly highlight yanked text
 
 "}}}
 
 "Autocommands{{{
 "===============
 
+augroup vimrc
+autocmd!
+
+"Settings for colorcolumn, only set if coding
+au FileType c,cs,cpp,python,rust,sh setlocal colorcolumn=81,101
+
 "Set arduino syntax to c
-au BufNewFile,BufRead,BufReadPost *.ino set syntax=c
+au BufNewFile,BufRead,BufReadPost *.ino setlocal syntax=c
 
 "Makefile syntax
-autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
+au FileType make setlocal noexpandtab shiftwidth=8 softtabstop=0
 
 "Addition of wsd as plantuml files
-autocmd BufNewFile,BufRead *.wsd set syntax=plantuml
+au BufNewFile,BufRead *.wsd setlocal syntax=plantuml
 
 "XML syntax for XAML files
-autocmd BufNewFile,BufRead *.xaml set syntax=xml
+au BufNewFile,BufRead *.xaml setlocal syntax=xml
 
 "When editing a file, always jump to the last known cursor position.
 "Don't do it when the position is invalid or when inside an event handler
@@ -284,16 +279,42 @@ autocmd BufReadPost *
 
 "C# Settings:
 ""Folding : http://vim.wikia.com/wiki/Syntax-based_folding, see comment by Ostrygen
-au FileType cs set foldmethod=marker
-au FileType cs set foldmarker={,}
-au FileType cs set foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
-au FileType cs set foldlevel=2
-au FileType cs set foldenable! "start with all folds open
+au FileType cs setlocal foldmethod=marker
+au FileType cs setlocal foldmarker={,}
+au FileType cs setlocal foldtext=substitute(getline(v:foldstart),'{.*','{...}',)
+au FileType cs setlocal foldlevel=2
+au FileType cs setlocal nofoldenable "start with all folds open
 
 "Python
-au FileType python set fdm=indent
-au FileType python set foldlevel=1
-au FileType python set textwidth=80
+au FileType python setlocal fdm=indent
+au FileType python setlocal foldlevel=1
+au FileType python setlocal textwidth=80
+
+"Vimwiki
+au BufNewFile,BufRead,BufReadPost *.wiki setlocal foldlevel=1
+"YCM is off here (too slow), so complete file paths natively.
+"<C-f> in insert mode completes relative to the file.
+au FileType vimwiki setlocal completefunc=WikiPathComplete
+au FileType vimwiki inoremap <buffer> <C-f> <C-x><C-u>
+au FileType vimwiki let b:ale_enabled = 0 " ALE chugs here
+
+"YCM mappings for C/C++ (buffer-local so they don't clobber tags elsewhere).
+"YCM's clangd is the only language server for C/C++; ALE is disabled for them.
+au FileType cpp,c  nmap <buffer> <C-]> :YcmCompleter GoToDefinition<CR>
+au FileType cpp,c  nmap <buffer> <silent> <Leader>u :YcmCompleter GoToReferences<CR>
+au FileType cpp,c  nmap <buffer> <Leader>dc :YcmCompleter GetDoc<CR>
+au FileType cpp,c  nmap <buffer> <Leader>dp <plug>(YCMHover)
+au FileType cpp,c  nmap <buffer> <Leader>dd :YcmDiags<CR>
+au FileType cpp,c  nmap <buffer> <Leader>h :YcmCompleter GoToAlternateFile<CR>
+au FileType cpp,c  nmap <buffer> <Leader>rn :YcmCompleter RefactorRename<Space>
+
+"ALE mappings for python
+au FileType python  nmap <buffer> <C-]> <Plug>(ale_go_to_definition)
+au FileType python  nmap <buffer> <silent> <Leader>u :ALEFindReferences -quickfix<CR>
+au FileType python  nmap <buffer> <Leader>dc <Plug>(ale_documentation)
+au FileType python  nmap <buffer> <Leader>dp <Plug>(ale_hover)
+
+augroup END
 
 
 ":}}}
@@ -316,20 +337,34 @@ let g:jellybeans_overrides = {
 \}
 """uncomment below & background dict for disabling shaded black background
 if has('termguicolors') && &termguicolors
-        let g:jellybeans_overrides['background']['guibg'] = 'none'
-    endif
+    let g:jellybeans_overrides['background']['guibg'] = 'none'
+endif
+"must come after the overrides above or they are ignored
+colorscheme jellybeans
 
 ""VimWiki
 nmap <Leader>wv <Plug>VimwikiVSplitLink
 nmap <Leader>wt <Plug>VimwikiTabnewLink
-" YCM is blacklisted in vimwiki (too slow), which also kills its filepath
-" completer. Fall back to Vim's native filename completion on <C-f> in insert
-" mode so we can still complete directories/files when writing links.
-autocmd FileType vimwiki inoremap <buffer> <C-f> <C-x><C-f>
-" required for it to work
-set nocompatible
-filetype plugin on
-syntax on
+
+"completefunc: complete paths relative to the current file's directory
+"(absolute and ~ paths work too). .wiki is dropped as vimwiki links omit it.
+function! WikiPathComplete(findstart, base) abort
+    if a:findstart
+        return match(getline('.')[: col('.') - 2], '\f*$')
+    endif
+    let l:abs = a:base =~# '^[/~]'
+    let l:dir = l:abs ? '' : expand('%:p:h') . '/'
+    let l:res = []
+    for l:p in glob(l:dir . a:base . '*', 0, 1)
+        let l:word = l:abs ? a:base . l:p[len(expand(a:base)):] : l:p[len(l:dir):]
+        if isdirectory(l:p)
+            call add(l:res, {'word': l:word . '/', 'menu': '[dir]'})
+        else
+            call add(l:res, {'word': substitute(l:word, '\.wiki$', '', ''), 'menu': '[file]'})
+        endif
+    endfor
+    return l:res
+endfunction
 
 
 """multiple
@@ -346,7 +381,6 @@ let g:vimwiki_list = [
 
 """folding
 let g:vimwiki_folding='expr'
-au BufNewFile,BufRead,BufReadPost *.wiki set foldlevel=1
 
 ""Ctags
 set tags=./tags,tags;$HOME
@@ -361,7 +395,6 @@ let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro' "line numbers
 let g:netrw_browsex_viewer= "xdg-open"
 
 ""OmniSharp
-filetype indent on                          "apparently required for the plugin to work
 let g:OmniSharp_highlighting = 0            "disable omnisharp highlighting
 let g:OmniSharp_server_stdio = 1            "use the stdio OmniSharp-roslyn server
 let g:OmniSharp_timeout = 30                "timeout in seconds to wait for a response from the server
@@ -396,9 +429,6 @@ augroup END
 let g:livedown_browser = "chrome"
 nmap gm :LivedownToggle<CR>
 
-""black python formatter
-"autocmd BufWritePre *.py execute ':Black'
-
 ""YCM
 let g:ycm_clangd_args = ['--background-index-priority=normal']
 let g:ycm_always_populate_location_list = 1 "use location list
@@ -414,20 +444,7 @@ let g:ycm_filetype_blacklist = {
     \ 'leaderf': 1,
     \ 'vimwiki': 1
     \}
-""" using YCM for c/c++ as clangd server will conflict with ALE's
-au FileType cpp,c  nmap <C-]> :YcmCompleter GoToDefinition<CR>
-au FileType cpp,c  nmap <silent> <Leader>u :YcmCompleter GoToReferences<CR>
-au FileType cpp,c  nmap <Leader>dc :YcmCompleter GetDoc<CR>
-au FileType cpp,c  nmap <Leader>dp <plug>(YCMHover)
-au FileType cpp,c  nmap <Leader>dd :YcmDiags<CR>
-au FileType cpp,c  nmap <Leader>h :YcmCompleter GoToAlternateFile<CR>
-au FileType cpp,c  nmap <Leader>rn :YcmCompleter RefactorRename<Space>
-
-"" ALE
-au FileType python  nmap <C-]> <Plug>(ale_go_to_definition)
-au FileType python  nmap <silent> <Leader>u :ALEFindReferences -quickfix<CR>
-au FileType python  nmap <Leader>dc <Plug>(ale_documentation)
-au FileType python  nmap <Leader>dp <Plug>(ale_hover)
+""ALE (mappings are in the Autocommands section)
 let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
 let g:ale_fixers = {
@@ -442,7 +459,6 @@ let g:ale_linters = {
             \ }
 let g:ale_fix_on_save = 1
 let g:ale_virtualenv_dir_names = ['.venv']
-autocmd FileType vimwiki let b:ale_enabled = 0 " ALE chugs here
 
 
 "" FZF
@@ -463,7 +479,7 @@ let g:fzf_action = {
 " some cheeky shortcuts
 noremap <leader>f :Files<cr>
 noremap <leader>b :Buffers<cr>
-noremap <leader>a :Ag<cr>
+noremap <leader>a :Rg<cr>
 noremap <leader>l :Lines<cr>
 
 
@@ -581,28 +597,23 @@ augroup END
 "============
 
 "Toggle number lines
-map <F2> :set number! <bar> set relativenumber! <CR>
+nnoremap <F2> :set number! <bar> set relativenumber!<CR>
 
 "Insert current date as YYYY-MM-DD Day format
-map <F9> :r! date +\%F" "\%A <CR> <bar>
+nnoremap <F9> :r! date +\%F" "\%A<CR>
 
 "Wrap word in backticks
 nnoremap <F10> cw`<C-r>"`<Esc>
 
 " Toggle spell
-map <F7> :set spell! <CR>
+nnoremap <F7> :set spell!<CR>
 
 " Allow saving of files as sudo when I forget to start vim using sudo.
-cmap w!! w !sudo tee /dev/null %
+cnoremap w!! w !sudo tee /dev/null %
 
 "Tmux-like resizing shortcuts
 noremap <C-w><C-y> <C-w>10<
 noremap <C-w><C-o> <C-w>10>
 noremap <C-w><C-u> <C-w>10-
 noremap <C-w><C-i> <C-w>10+
-
-nnoremap <SPACE> <Nop>
-map <Space> <Leader>
-let mapleader = "\<space>" "space as leader key
-let mapleader = " " "space as leader key
 "}}}
