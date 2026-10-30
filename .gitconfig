@@ -19,7 +19,7 @@
     dt = difftool -t vimdiff -y
     mt = mergetool -t vimdiff
     fco= !git branch -a | fzf | sed \"s/remotes\\/origin\\///\" | xargs git checkout
-    fre = ! git status --porcelain | grep '^ M' | awk '{print $2}' | fzf | xargs git restore --
+    fre = ! git status --porcelain | grep '^ M' | awk '{print $2}' | fzf -m | xargs git restore --
 
 [color "branch"]
     upstream = 215

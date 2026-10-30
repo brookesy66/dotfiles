@@ -108,6 +108,9 @@ stty -ixon
 # path
 export PATH="${HOME}/.local/bin:$PATH"
 
+# npm global installs (user-owned prefix, no sudo)
+export PATH="$HOME/.npm-global/bin:$PATH"
+
 . "$HOME/.local/bin/env"
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -135,3 +138,17 @@ export WHOME="/mnt/c/Users/wgb.PI"
 # zoxide (used by yazi's `z` keybinding to fuzzy-jump dirs)
 export _ZO_FZF_OPTS="--height=100% --reverse --border --info=inline"
 eval "$(zoxide init zsh)"
+
+# Orion RA4M3 firmware.
+#
+# Deliberately does NOT put ~/toolchains/arm-gnu-10.3-2021.10/bin on PATH.
+# The current baseline (feature/mfl/cmake) targets GCC 13.2, which is what
+# /usr/bin/arm-none-eabi-gcc already provides; shadowing it with 10.3 would
+# make cmake/build.sh silently build against a different compiler than the
+# clangd index was generated from. 10.3 is still installed for the older
+# FSP4.1.0 pipeline, which reaches it by absolute path (as does the
+# arm-none-eabi-gdb wrapper below).
+export ORION_ARM_GCC_10_3="$HOME/toolchains/arm-gnu-10.3-2021.10/bin"
+# gdb wrapper: supplies the libncurses.so.5 compat shim the Arm toolchain
+# gdbs need on Ubuntu 24.04.
+export ORION_ARM_GDB="$HOME/toolchains/arm-none-eabi-gdb"
