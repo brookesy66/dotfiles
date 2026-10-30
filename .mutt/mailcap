@@ -1,1 +1,11 @@
+# Inline text rendering of HTML in mutt's pager (no images, no remote fetch).
+# Used by `auto_view text/html`.
 text/html; w3m -I %{charset} -T text/html; copiousoutput;
+
+# Fullscreen interactive HTML view with images, triggered when you press `m`
+# (view-mailcap) on the text/html attachment part. Requires a terminal that
+# supports w3mimgdisplay (xterm-class) and NOT being inside tmux/screen.
+text/html; w3m -o display_image=1 -o auto_image=1 %s; needsterminal; nametemplate=%s.html
+
+# Coarse half-block preview of attached images inline in the pager.
+image/*; chafa -f symbols --size 80x20 %s; copiousoutput;
