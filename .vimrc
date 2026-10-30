@@ -13,12 +13,12 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'ntpeters/vim-better-whitespace'               " better handling of whitespace
 Plug 'nanotech/jellybeans.vim'                      " a nice colorscheme
-"Plug 'chrisbra/csv.vim'                            " CSV file manipulation
+Plug 'chrisbra/csv.vim'                            " CSV file manipulation
 Plug 'vimwiki/vimwiki'                              " wiki/diary plugin
 Plug 'OmniSharp/omnisharp-vim'                      " C# IDE-like plugin
 Plug 'tpope/vim-fugitive'                           " powerful Git plugin
 Plug 'junegunn/gv.vim'                              " Git commit browser - uses fugitive
-Plug 'git://github.com/shime/vim-livedown'          " markdown plugin
+Plug 'shime/vim-livedown'                           " markdown plugin
 Plug 'psf/black', { 'branch': 'stable' }            " python formatting
 Plug 'Valloric/YouCompleteMe'                       " auto completion
 "Plug 'vim/killersheep'                             " funny game
@@ -322,6 +322,10 @@ if has('termguicolors') && &termguicolors
 ""VimWiki
 nmap <Leader>wv <Plug>VimwikiVSplitLink
 nmap <Leader>wt <Plug>VimwikiTabnewLink
+" YCM is blacklisted in vimwiki (too slow), which also kills its filepath
+" completer. Fall back to Vim's native filename completion on <C-f> in insert
+" mode so we can still complete directories/files when writing links.
+autocmd FileType vimwiki inoremap <buffer> <C-f> <C-x><C-f>
 " required for it to work
 set nocompatible
 filetype plugin on
@@ -389,7 +393,7 @@ augroup END
 
 
 ""livedown
-let g:livedown_browser = "firefox"
+let g:livedown_browser = "chrome"
 nmap gm :LivedownToggle<CR>
 
 ""black python formatter
@@ -417,6 +421,7 @@ au FileType cpp,c  nmap <Leader>dc :YcmCompleter GetDoc<CR>
 au FileType cpp,c  nmap <Leader>dp <plug>(YCMHover)
 au FileType cpp,c  nmap <Leader>dd :YcmDiags<CR>
 au FileType cpp,c  nmap <Leader>h :YcmCompleter GoToAlternateFile<CR>
+au FileType cpp,c  nmap <Leader>rn :YcmCompleter RefactorRename<Space>
 
 "" ALE
 au FileType python  nmap <C-]> <Plug>(ale_go_to_definition)
@@ -427,7 +432,7 @@ let g:ale_floating_preview=1
 let g:ale_hover_cursor=0 " don't hover by default
 let g:ale_fixers = {
             \ 'python': ['isort', 'black'],
-            \ 'cpp': ['clang-format'],
+            "\ 'cpp': ['clang-format'],
             \ }
 let g:ale_linters = {
             \ 'cs': ['OmniSharp'],
