@@ -27,7 +27,10 @@
         "custom/power"
     ],
     // Modules configuration
+    // waybar-git may be a good alternative: it fixes hyprland/workspaces on Lua config (Waybar PR #5013)
     "ext/workspaces": {
+        "sort-by-name": true,
+        "sort-by-coordinates": false,
         "on-click": "activate",
         "disable-scroll": false,
         "separate-outputs": true,
