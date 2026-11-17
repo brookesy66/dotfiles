@@ -39,6 +39,155 @@ Plug 'szw/vim-maximizer'
 call plug#end()
 "}}}
 
+"Functions{{{
+"=============
+
+" Fast diary index for the daily wiki: avoids reading every file by
+" computing the weekday from the filename. ~instant for 1000+ entries.
+function! DiaryFastIndex() abort
+  let l:diary_path = expand('~/vimwiki/diary')
+  let l:files = glob(l:diary_path . '/[0-9]*.wiki', 0, 1)
+  let l:month_names = ['January','February','March','April','May','June',
+        \ 'July','August','September','October','November','December']
+
+  let l:by_year = {}
+  for l:f in l:files
+    let l:base = fnamemodify(l:f, ':t:r')
+    let l:m = matchlist(l:base, '\v^(\d{4})-(\d{2})-(\d{2})$')
+    if empty(l:m) | continue | endif
+    let [l:y, l:mo] = [l:m[1], l:m[2]]
+    if !has_key(l:by_year, l:y) | let l:by_year[l:y] = {} | endif
+    if !has_key(l:by_year[l:y], l:mo) | let l:by_year[l:y][l:mo] = [] | endif
+    call add(l:by_year[l:y][l:mo], l:base)
+  endfor
+
+  let l:lines = ['= Diary =']
+  for l:y in reverse(sort(keys(l:by_year)))
+    call add(l:lines, '== ' . l:y . ' ==')
+    call add(l:lines, '')
+    for l:mo in reverse(sort(keys(l:by_year[l:y])))
+      call add(l:lines, '=== ' . l:month_names[str2nr(l:mo) - 1] . ' ===')
+      for l:date in reverse(sort(l:by_year[l:y][l:mo]))
+        let l:weekday = strftime('%A', strptime('%Y-%m-%d', l:date))
+        call add(l:lines, '    - [[' . l:date . '|' . l:date . ' ' . l:weekday . ']]')
+      endfor
+      call add(l:lines, '')
+    endfor
+  endfor
+
+  call writefile(l:lines, l:diary_path . '/diary.wiki')
+  echo 'DiaryFastIndex: wrote ' . len(l:files) . ' entries'
+endfunction
+command! DiaryFastIndex call DiaryFastIndex()
+
+" Roll yesterday's diary forward into today's: carry over summary sections
+" (everything above == Yesterday ==), seed Yesterday's === Non-Summary ===
+" with yesterday's Today body, leave Yesterday and Today bodies empty.
+" Optional arg: alternate output path (for testing).
+function! DiaryRollover(...) abort
+  let l:diary_path = expand('~/vimwiki/diary')
+  let l:today = strftime('%Y-%m-%d')
+  let l:weekday = strftime('%A')
+  let l:target = a:0 >= 1 ? a:1 : (l:diary_path . '/' . l:today . '.wiki')
+
+  if a:0 == 0 && filereadable(l:target)
+    let l:meaningful = filter(readfile(l:target),
+          \ 'v:val !~# ''^=\s.*\s=\s*$'' && v:val !~# ''^\s*$''')
+    if !empty(l:meaningful)
+      echohl WarningMsg
+      echom 'DiaryRollover: ' . l:target . ' already has content — refusing'
+      echohl None
+      return
+    endif
+  endif
+
+  " Find most recent prior dated diary
+  let l:dates = []
+  for l:f in glob(l:diary_path . '/[0-9]*.wiki', 0, 1)
+    let l:b = fnamemodify(l:f, ':t:r')
+    if l:b =~# '^\d\{4\}-\d\{2\}-\d\{2\}$' && l:b < l:today
+      call add(l:dates, l:b)
+    endif
+  endfor
+
+  let l:out = ['= ' . l:today . ' ' . l:weekday . ' =', '']
+
+  if empty(l:dates)
+    call extend(l:out, ['== Notes ==', '', '== Active ==', '', '== Inactive ==',
+          \ '', '== Yesterday ==', '', '=== Non-Summary ===', '',
+          \ '== Today ==', ''])
+    call writefile(l:out, l:target)
+    if a:0 == 0 | execute 'edit ' . fnameescape(l:target) | endif
+    echo 'DiaryRollover: no prior diary, created stub'
+    return
+  endif
+
+  let l:source_date = sort(l:dates)[-1]
+  let l:source = readfile(l:diary_path . '/' . l:source_date . '.wiki')
+
+  " Parse source by H2 headings; capture preamble (above first H2) too
+  let l:sections = []
+  let l:cur_h = ''
+  let l:cur_b = []
+  for l:line in l:source
+    if l:line =~# '^==\s.\+\s==\s*$'
+      if !empty(l:cur_h)
+        call add(l:sections, [l:cur_h, l:cur_b])
+      endif
+      let l:cur_h = l:line
+      let l:cur_b = []
+    elseif l:line =~# '^=\s.\+\s=\s*$' && empty(l:cur_h)
+      " skip source's H1
+    else
+      if !empty(l:cur_h)
+        call add(l:cur_b, l:line)
+      endif
+    endif
+  endfor
+  if !empty(l:cur_h) | call add(l:sections, [l:cur_h, l:cur_b]) | endif
+
+  " Carry forward sections before == Yesterday ==; capture Today body
+  let l:today_body = []
+  let l:hit_yest = 0
+  for [l:h, l:b] in l:sections
+    if l:h =~# '^==\s\+Yesterday\s\+==\s*$'
+      let l:hit_yest = 1
+      continue
+    endif
+    if l:h =~# '^==\s\+Today\s\+==\s*$'
+      let l:today_body = l:b
+      continue
+    endif
+    if !l:hit_yest
+      call add(l:out, l:h)
+      call extend(l:out, l:b)
+    endif
+  endfor
+
+  " Trim leading/trailing blanks from Today body before nesting it
+  while !empty(l:today_body) && l:today_body[0] =~# '^\s*$'
+    call remove(l:today_body, 0)
+  endwhile
+  while !empty(l:today_body) && l:today_body[-1] =~# '^\s*$'
+    call remove(l:today_body, -1)
+  endwhile
+
+  call extend(l:out, ['== Yesterday ==', '', '=== Non-Summary ===', ''])
+  call extend(l:out, l:today_body)
+  call extend(l:out, ['', '== Today ==', ''])
+
+  call writefile(l:out, l:target)
+  if a:0 == 0
+    execute 'edit ' . fnameescape(l:target)
+    call search('^== Today ==$', 'w')
+    normal! 2j
+  endif
+  echo 'DiaryRollover: rolled forward from ' . l:source_date
+endfunction
+command! -nargs=? DiaryRollover call DiaryRollover(<f-args>)
+
+"}}}
+
 "Prefs{{{
 "=========
 
@@ -78,16 +227,20 @@ set nofoldenable                "start with all folds open, close with <z-i>
 set textwidth=100               "sets line at which gq wraps text
 set completeopt=popup,menuone   "use popup window, not preview
 set t_RV=                       "fix issue with devicons/airline having junk
-set exrc
-set secure
+set exrc                        "allow per-directory vimrc
+set secure                      "disable unsafe commands in local vimrcs
 "set spell spelllang=en_au       "turn spell on. FUck spell
+
+"use ripgrep instead of grep. Fixes binary/directory bullshit and not finding entries sometimes
+set grepprg=rg\ --vimgrep
+set grepformat=%f:%l:%c:%m
 
 "Omnicompletion
 set omnifunc=syntaxcomplete#Complete
 
-"Built-in optional packages shipped with Vim 9.2
-packadd! comment                "gc/gcc to toggle comments
-packadd! hlyank                 "briefly highlight yanked text
+"Built-in optional packages (silent! as they need a recent Vim 9.1+)
+silent! packadd! comment        "gc/gcc to toggle comments
+silent! packadd! hlyank         "briefly highlight yanked text
 
 "}}}
 
@@ -215,11 +368,10 @@ function! WikiPathComplete(findstart, base) abort
 endfunction
 
 """multiple
-let wiki_1 = {}
-let wiki_1.path = '~/vimwiki'
-let wiki_2 = {}
-let wiki_2.path = '~/vimwiki/work/wgb-wiki'
-let g:vimwiki_list = [wiki_1, wiki_2]
+let g:vimwiki_list = [
+  \ { 'path': '~/vimwiki', 'auto_tags': 1 },
+  \ { 'path': has('wsl') ? '~/vimwiki/lonsdale' : '~/vimwiki/work/wgb-wiki', 'auto_tags': 1 },
+  \ ]
 
 """folding
 let g:vimwiki_folding='expr'
@@ -239,9 +391,16 @@ let g:netrw_browsex_viewer= "xdg-open"
 ""OmniSharp
 let g:OmniSharp_highlighting = 0            "disable omnisharp highlighting
 let g:OmniSharp_server_stdio = 1            "use the stdio OmniSharp-roslyn server
-let g:OmniSharp_timeout = 5                 "timeout in seconds to wait for a response from the server
-"let g:OmniSharp_server_use_mono = 1
-let g:OmniSharp_server_use_net6 = 1 "Had to set this to use .net7 sdk on emerald. msbuild too old
+let g:OmniSharp_selector_ui = 'fzf'         "use fzf to pick solution when multiple exist
+let g:OmniSharp_prefer_global_sln = 1       "search up for .sln from file location
+if has('wsl')
+    let g:OmniSharp_timeout = 30                "big Windows solutions are slow to load
+    let g:OmniSharp_translate_cygwin_wsl = 1    "needed to convert windows and linux paths
+    let g:OmniSharp_server_use_mono = 0
+else
+    let g:OmniSharp_timeout = 5                 "timeout in seconds to wait for a response from the server
+    let g:OmniSharp_server_use_net6 = 1 "Had to set this to use .net7 sdk on emerald. msbuild too old
+endif
 augroup omnisharp_commands
     autocmd!
 
@@ -266,7 +425,7 @@ augroup END
 
 
 ""livedown
-let g:livedown_browser = "firefox"
+let g:livedown_browser = has('wsl') ? "chrome" : "firefox"
 nmap gm :LivedownToggle<CR>
 
 ""YCM
@@ -299,7 +458,6 @@ let g:ale_hover_cursor=0 " don't hover by default
 let g:ale_fixers = {
             \ '*': ['trim_whitespace', 'remove_trailing_lines'],
             \ 'python': ['isort', 'black'],
-            \ 'cpp': ['clang-format'],
             \ }
 let g:ale_linters = {
             \ 'cs': ['OmniSharp'],
@@ -308,6 +466,10 @@ let g:ale_linters = {
             \ 'c': [],
             \ }
 let g:ale_fix_on_save = 1
+"only clang-format C/C++ when the project has a .clang-format, so we never
+"reformat someone else's code to the default LLVM style
+au vimrc FileType c,cpp if !empty(findfile('.clang-format', expand('%:p:h') . ';'))
+            \ | let b:ale_fixers = ['clang-format', 'trim_whitespace', 'remove_trailing_lines'] | endif
 let g:ale_virtualenv_dir_names = ['.venv']
 
 
@@ -378,6 +540,24 @@ nmap <LocalLeader>D     <Plug>VimspectorDisassemble
 
 
 
+"}}}
+
+"WSL{{{
+"======
+" Only on the work laptop (Ubuntu under WSL), where files are often shared
+" with Windows tools and paths come in as C:\like\this.
+if has('wsl')
+    "copy the current file's path to the Windows clipboard (Linux or Windows form)
+    command! CopyPath    call system('clip.exe', expand('%:p'))
+    command! CopyWinPath call system('clip.exe', trim(system('wslpath -w ' . shellescape(expand('%:p')))))
+    "open a Windows path, e.g. :WinEdit C:\projects\foo\bar.cpp
+    command! -nargs=1 -complete=file WinEdit
+                \ execute 'edit' fnameescape(trim(system('wslpath -u ' . shellescape(<q-args>))))
+    "gx: hand URLs/files to Windows instead of a Linux browser
+    if executable('wslview')
+        let g:netrw_browsex_viewer = 'wslview'
+    endif
+endif
 "}}}
 
 "Highlight words{{{

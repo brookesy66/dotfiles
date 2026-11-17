@@ -1,0 +1,3 @@
+# work laptop: default to the work identity everywhere
+[user]
+	email = will.brookes@planetinnovation.com.au

@@ -1,0 +1,31 @@
+# WSL (Ubuntu on the work laptop) only. Sourced at the end of ~/.zshrc.
+
+# Losedows home
+export WHOME="/mnt/c/Users/wgb.PI"
+export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
+export PATH="$HOME/.poetry/bin:$PATH"
+
+alias home="cd $WHOME"
+alias proj='cd /mnt/c/projects/'
+alias exp='explorer.exe .'
+alias powershell='powershell.exe'
+alias cmd='cmd.exe'
+alias wchrome="/mnt/c/Program\ Files/Google/Chrome/Application/chrome.exe"
+
+# convert between Windows and WSL paths, e.g. `cd "$(wp 'C:\projects\foo')"`
+wp() { wslpath -u "$1"; }
+winp() { wslpath -w "${1:-.}"; }
+
+# Orion RA4M3 firmware.
+#
+# Deliberately does NOT put ~/toolchains/arm-gnu-10.3-2021.10/bin on PATH.
+# The current baseline (feature/mfl/cmake) targets GCC 13.2, which is what
+# /usr/bin/arm-none-eabi-gcc already provides; shadowing it with 10.3 would
+# make cmake/build.sh silently build against a different compiler than the
+# clangd index was generated from. 10.3 is still installed for the older
+# FSP4.1.0 pipeline, which reaches it by absolute path (as does the
+# arm-none-eabi-gdb wrapper below).
+export ORION_ARM_GCC_10_3="$HOME/toolchains/arm-gnu-10.3-2021.10/bin"
+# gdb wrapper: supplies the libncurses.so.5 compat shim the Arm toolchain
+# gdbs need on Ubuntu 24.04.
+export ORION_ARM_GDB="$HOME/toolchains/arm-none-eabi-gdb"

@@ -1,1 +1,11 @@
+# mutt encrypted credentials (kept out of the repo)
 .mutt/secrets.gpg
+
+# mutt local mail cache (headers and message bodies)
+.mutt/cache/
+
+# third-party plugin clones
+.config/ranger/plugins/
+
+__pycache__/
+*.orig

@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/will/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -72,7 +72,7 @@ ZSH_THEME="will"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(vi-mode command-not-found colored-man-pages)
+plugins=(vi-mode command-not-found colored-man-pages cp)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -107,28 +107,35 @@ stty -ixon
 
 # path
 export PATH="${HOME}/.local/bin:$PATH"
+# npm global installs (user-owned prefix, no sudo)
+export PATH="$HOME/.npm-global/bin:$PATH"
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
+
+export EDITOR=vi
 
 # add time to prompt
 RPROMPT='[%D{%K:%M:%S}] '$RPROMPT
 
-
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+[ -d "$PYENV_ROOT/bin" ] && export PATH="$PYENV_ROOT/bin:$PATH"
+command -v pyenv >/dev/null && eval "$(pyenv init -)"
 
 #fzf
-source /usr/share/fzf/completion.zsh
-source /usr/share/fzf/key-bindings.zsh
-eval "$(uv generate-shell-completion zsh)"
+eval "$(fzf --zsh)"
+command -v uv >/dev/null && eval "$(uv generate-shell-completion zsh)"
 
 # fixes colored-man-pages plugin not working
 export GROFF_NO_SGR=1
 
-# zoxide
+# zoxide (used by yazi's `z` keybinding to fuzzy-jump dirs)
+export _ZO_FZF_OPTS="--height=100% --reverse --border --info=inline"
 eval "$(zoxide init zsh)"
 
 # History: big, shared across sessions, deduped
 HISTSIZE=50000
 SAVEHIST=50000
 setopt SHARE_HISTORY HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
+
+# per-machine settings, linked from hosts/<profile>/ by install.sh
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
