@@ -42,8 +42,15 @@ run() { if [ -n "$DRY_RUN" ]; then echo "  would: $*"; else "$@"; fi; }
 link() {
     local src="$REPO/$1" dst="$HOME/$2"
 
+    # tracked symlinks (e.g. dunstrc -> dunstrc.pywal) point at machine-local
+    # files; linking to them would just leave a dangling link in $HOME
+    if [ -L "$src" ]; then
+        echo "skipped (symlink in repo): $2"
+        return
+    fi
+
     # already correctly linked
-    if [ -L "$dst" ] && [ "$(readlink -f "$dst")" = "$src" ]; then
+    if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
         return
     fi
 
