@@ -1,0 +1,48 @@
+# Mirrors entries from ~/.ssh/config so they're browsable inside yazi.
+# Open from shell: `yazi sftp://thebox`
+# Open from yazi:  `:` then `cd sftp://thebox`
+
+# Home machine (LAN)
+[services.thebox]
+type = "sftp"
+host = "192.168.1.104"
+user = "will"
+port = 1993
+key_file = "/home/wgb/.ssh/id_ed25519"
+
+# Home machine (over the internet)
+[services.remotebox]
+type = "sftp"
+host = "brookesyarchibox.duckdns.org"
+user = "will"
+port = 1993
+key_file = "/home/wgb/.ssh/id_ed25519"
+
+# Yocto test boxes — all share 192.168.1.2, distinguished by key file
+[services.tdx]
+type = "sftp"
+host = "192.168.1.2"
+user = "root"
+port=22
+key_file = "/home/wgb/.ssh/id_ed25519_tdx"
+
+[services.beta2]
+type = "sftp"
+host = "192.168.1.2"
+user = "root"
+port=22
+key_file = "/home/wgb/.ssh/id_ed25519_beta2"
+
+[services.beta3]
+type = "sftp"
+host = "192.168.1.2"
+user = "root"
+port=22
+key_file = "/home/wgb/.ssh/id_ed25519_beta3"
+
+[services.beta6]
+type = "sftp"
+host = "192.168.1.2"
+user = "root"
+port=22
+key_file = "/home/wgb/.ssh/id_ed25519_beta6"

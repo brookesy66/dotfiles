@@ -1,0 +1,4 @@
+#[open]
+#prepend_rules = [
+#    { url = "*.log", use = "edit" }, # force vim for files that show as bin data
+#]

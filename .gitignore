@@ -6,3 +6,6 @@
 
 __pycache__/
 *.orig
+
+# yazi flavors (installed by ya pkg from package.toml)
+.config/yazi/flavors/

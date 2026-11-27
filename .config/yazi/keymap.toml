@@ -1,0 +1,6 @@
+[mgr]
+prepend_keymap = [
+  { on = "z", run = '''shell --block 'target=$(fd --type d --hidden --exclude .git . | fzf --reverse --height=100% --prompt="Jump > "); [ -n "$target" ] && ya emit cd "$target" ' ''', desc = "Jump to a dir via fd+fzf" },
+
+  { on = "Z", run = '''shell --block 'target=$(zoxide query -i); [ -n "$target" ] && ya emit cd "$target" ' ''', desc = "Jump via zoxide" },
+]

@@ -1,0 +1,16 @@
+# To switch flavor, change the `dark` value below to one of:
+#   dracula
+#   catppuccin-frappe
+#   catppuccin-latte       (light, good for `light = `)
+#   catppuccin-macchiato
+#   catppuccin-mocha
+#   tokyo-night
+# Then restart yazi (no need to reload anything else).
+#
+# Note: the tokyo-night flavor's file fallback color was edited locally
+# (~/.config/yazi/flavors/tokyo-night.yazi/flavor.toml, last entry under
+# [filetype]) from #c6d0f5 to #ffffff so plain files render pure white.
+
+[flavor]
+dark = "tokyo-night"
+# light = "catppuccin-latte"
