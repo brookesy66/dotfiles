@@ -111,8 +111,8 @@ export PATH="${HOME}/.local/bin:$PATH"
 # npm global installs (user-owned prefix, no sudo)
 export PATH="$HOME/.npm-global/bin:$PATH"
 
-. "$HOME/.local/bin/env"
-export PATH="$HOME/.local/bin:$PATH"
+# cargo-installed binaries (uv, uvx, ...)
+export PATH="$HOME/.cargo/bin:$PATH"
 
 
 # browser
