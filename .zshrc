@@ -133,7 +133,7 @@ export PATH="$HOME/.poetry/bin:$PATH"
 eval "$(fzf --zsh)"
 
 # Losedows home
-export WHOME="/mnt/c/Users/wgb.PI"
+export WHOME="/mnt/c/Users/wgb"
 
 # zoxide (used by yazi's `z` keybinding to fuzzy-jump dirs)
 export _ZO_FZF_OPTS="--height=100% --reverse --border --info=inline"
